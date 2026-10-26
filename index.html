@@ -6610,5 +6610,298 @@
       });
     }
   </script>
+<!-- ===================== PART 1: TERRA EDITORIAL DESIGN SYSTEM, CURSOR & SVG ICONS ===================== -->
+<style id="terra-part1-editorial-ui">
+  /* 1. Refined Editorial Color Tokens & Surface Hierarchy */
+  :root, html[data-theme="light"] {
+    --bg-primary: #F7F6F2;
+    --bg-elevated: #FFFFFF;
+    --bg-subtle: #EFECE6;
+    --bg-glass: rgba(247, 246, 242, 0.88);
+    --bg-glass-strong: rgba(255, 255, 255, 0.96);
+    --text-primary: #141614;
+    --text-secondary: #4A4F48;
+    --text-muted: #767B73;
+    --accent-forest: #1E3F2E;
+    --accent-forest-hover: #152D21;
+    --accent-forest-soft: #E6EFE9;
+    --accent-gaia: #1B4D52;
+    --accent-gaia-soft: #E3EFF0;
+    --accent-earth: #9C5A35;
+    --accent-earth-soft: #F6EBE4;
+    --accent-dopamine: #1E3F2E;
+    --border-subtle: #E2DFD7;
+    --border-strong: #C9C5BA;
+    --shadow-xs: 0 1px 2px rgba(20, 22, 20, 0.03);
+    --shadow-sm: 0 6px 18px rgba(20, 22, 20, 0.04);
+    --shadow-md: 0 14px 32px rgba(20, 22, 20, 0.07);
+    --shadow-lg: 0 28px 56px rgba(20, 22, 20, 0.12);
+    --radius-xs: 6px;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+  }
 
+  html[data-theme="dark"] {
+    --bg-primary: #0B0F0D;
+    --bg-elevated: #121815;
+    --bg-subtle: #19221E;
+    --bg-glass: rgba(11, 15, 13, 0.88);
+    --bg-glass-strong: rgba(18, 24, 21, 0.96);
+    --text-primary: #F0F2EF;
+    --text-secondary: #A6B0AA;
+    --text-muted: #6E7872;
+    --accent-forest: #38C6A3;
+    --accent-forest-hover: #2BA888;
+    --accent-forest-soft: rgba(56, 198, 163, 0.14);
+    --accent-gaia: #4DA4AB;
+    --accent-gaia-soft: rgba(77, 164, 171, 0.16);
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+  }
+
+  /* 2. Disable Distracting Background Particle Noise for Calm Reading */
+  #animated-bg-canvas {
+    opacity: 0.25 !important;
+  }
+  .ambient-bg {
+    background: radial-gradient(circle at 15% 15%, var(--accent-forest-soft), transparent 45%) !important;
+  }
+
+  /* 3. Editorial Typography Scale (Instrument Serif + Plus Jakarta Sans) */
+  body {
+    font-family: var(--font-sans);
+    letter-spacing: -0.011em;
+    -webkit-font-smoothing: antialiased;
+  }
+  .hero-title {
+    font-family: var(--font-serif) !important;
+    font-weight: 400 !important;
+    font-size: clamp(3rem, 5.2vw, 4.6rem) !important;
+    line-height: 1.03 !important;
+    letter-spacing: -0.02em !important;
+  }
+  .section-title {
+    font-family: var(--font-serif) !important;
+    font-weight: 400 !important;
+    font-size: clamp(2rem, 3.2vw, 2.75rem) !important;
+    letter-spacing: -0.015em !important;
+    line-height: 1.1 !important;
+  }
+
+  /* 4. Unified Architectural Button System (Replaces Neon Gradients) */
+  .btn {
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    font-size: 0.84rem;
+    letter-spacing: -0.005em;
+    padding: 0.62rem 1.2rem;
+    box-shadow: none !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-primary, .btn-dopamine {
+    background: var(--accent-forest) !important;
+    color: var(--bg-primary) !important;
+    border: 1px solid var(--accent-forest) !important;
+  }
+  html[data-theme="light"] .btn-primary,
+  html[data-theme="light"] .btn-dopamine {
+    color: #FFFFFF !important;
+  }
+  .btn-primary:hover, .btn-dopamine:hover {
+    background: var(--accent-forest-hover) !important;
+    border-color: var(--accent-forest-hover) !important;
+    transform: translateY(-1px);
+  }
+  .btn-secondary, .btn-gaia {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-strong) !important;
+  }
+  .btn-secondary:hover, .btn-gaia:hover {
+    background: var(--bg-subtle) !important;
+    border-color: var(--text-primary) !important;
+    transform: translateY(-1px);
+  }
+
+  /* 5. Elevated Top Navigation & Distinct Section Badges */
+  .site-header {
+    height: 68px;
+    background: var(--bg-glass-strong);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .brand-logo {
+    font-family: var(--font-sans);
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    font-size: 0.98rem;
+  }
+  .primary-nav {
+    gap: 0.35rem !important;
+  }
+  .primary-nav .nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.38rem;
+    padding: 0.42rem 0.78rem !important;
+    border-radius: var(--radius-pill);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border: 1px solid transparent;
+    transition: all 0.18s ease;
+  }
+  .primary-nav .nav-link:hover,
+  .primary-nav .nav-link.active {
+    color: var(--text-primary);
+    background: var(--bg-subtle);
+  }
+  /* Distinct Identity for EcoLoop 3D & Gaia Advisor in Navbar */
+  #nav-ecoloop-btn, #nav-gaia-btn {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-strong) !important;
+    padding: 0.4rem 0.85rem !important;
+    font-weight: 600 !important;
+  }
+  #nav-ecoloop-btn:hover, #nav-gaia-btn:hover {
+    border-color: var(--accent-forest) !important;
+    background: var(--accent-forest-soft) !important;
+  }
+
+  /* 6. Refined Product Cards & Containers */
+  .product-card, .showcase-card, .ritual-architect-card, .pillar-card {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-xs);
+    background: var(--bg-elevated);
+  }
+  .product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-strong);
+  }
+  .card-wishlist-btn.active {
+    color: #E11D48 !important;
+    border-color: rgba(225, 29, 72, 0.3) !important;
+    background: rgba(225, 29, 72, 0.08) !important;
+  }
+
+  /* 7. Bespoke Dual-Layer Magnetic Custom Cursor */
+  @media (pointer: fine) {
+    body, a, button, input, select, textarea, .product-card {
+      cursor: none !important;
+    }
+    #terra-cursor-dot, #terra-cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 999999;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #terra-cursor-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--text-primary);
+      transition: width 0.18s ease, height 0.18s ease, background 0.18s ease;
+    }
+    #terra-cursor-ring {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--text-primary);
+      opacity: 0.32;
+      transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                  height 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                  opacity 0.22s ease,
+                  border-color 0.22s ease,
+                  background-color 0.22s ease;
+    }
+    body.terra-cursor-hover #terra-cursor-dot {
+      width: 4px;
+      height: 4px;
+      background: var(--accent-forest);
+    }
+    body.terra-cursor-hover #terra-cursor-ring {
+      width: 48px;
+      height: 48px;
+      opacity: 0.75;
+      border-color: var(--accent-forest);
+      background-color: var(--accent-forest-soft);
+    }
+    body.terra-cursor-down #terra-cursor-ring {
+      width: 24px;
+      height: 24px;
+      opacity: 0.95;
+    }
+  }
+</style>
+
+<script id="terra-part1-script">
+  window.addEventListener("DOMContentLoaded", () => {
+    // 1. Upgrade Brand Mark & Navigation Emojis to Crisp Vector SVGs (Non-destructive: keeps all listeners intact)
+    const brandMark = document.querySelector(".brand-mark");
+    if (brandMark) {
+      brandMark.style.cssText = "width:22px;height:22px;border-radius:6px;background:var(--accent-forest);color:var(--bg-primary);display:inline-flex;align-items:center;justify-content:center;";
+      brandMark.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>`;
+    }
+
+    const ecoloops = [document.getElementById("nav-ecoloop-btn"), document.getElementById("footer-ecoloop-btn")];
+    ecoloops.forEach(btn => {
+      if (btn) {
+        btn.removeAttribute("style");
+        btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent-forest);"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg><span>EcoLoop 3D</span>`;
+      }
+    });
+
+    const gaiaNav = document.getElementById("nav-gaia-btn");
+    if (gaiaNav) {
+      gaiaNav.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent-gaia);"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><span>Gaia Advisor</span>`;
+    }
+
+    // 2. Initialize Smooth Magnetic Custom Cursor
+    if (window.matchMedia("(pointer: fine)").matches && !document.getElementById("terra-cursor-dot")) {
+      const dot = document.createElement("div");
+      dot.id = "terra-cursor-dot";
+      const ring = document.createElement("div");
+      ring.id = "terra-cursor-ring";
+      document.body.appendChild(dot);
+      document.body.appendChild(ring);
+
+      let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+      let rx = mx, ry = my;
+
+      window.addEventListener("mousemove", (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+        dot.style.left = mx + "px";
+        dot.style.top = my + "px";
+      }, { passive: true });
+
+      function stepCursor() {
+        rx += (mx - rx) * 0.2;
+        ry += (my - ry) * 0.2;
+        ring.style.left = rx + "px";
+        ring.style.top = ry + "px";
+        requestAnimationFrame(stepCursor);
+      }
+      requestAnimationFrame(stepCursor);
+
+      document.addEventListener("mouseover", (e) => {
+        if (e.target.closest("a, button, input, select, textarea, .product-card, .showcase-image-wrap, [data-inspect]")) {
+          document.body.classList.add("terra-cursor-hover");
+        }
+      });
+      document.addEventListener("mouseout", (e) => {
+        if (e.target.closest("a, button, input, select, textarea, .product-card, .showcase-image-wrap, [data-inspect]")) {
+          document.body.classList.remove("terra-cursor-hover");
+        }
+      });
+      document.addEventListener("mousedown", () => document.body.classList.add("terra-cursor-down"));
+      document.addEventListener("mouseup", () => document.body.classList.remove("terra-cursor-down"));
+    }
+  });
+</script>
 </body></html>
