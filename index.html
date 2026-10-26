@@ -6904,4 +6904,900 @@
     }
   });
 </script>
+  <!-- ===================== PART 2: SLEEK MULTI-PAGE SPA ARCHITECTURE & LUXURY UI OVERHAUL ===================== -->
+<style id="terra-part2-sleek-pages-ui">
+  /* 1. Global Luxury Spacing & De-Cluttering */
+  :root {
+    --header-height: 74px;
+    --container-max: 1320px;
+  }
+
+  /* Restore clean native cursor with subtle magnetic ring follower (prevents frozen cursor lock) */
+  body, a, button, input, select, textarea, .product-card {
+    cursor: auto !important;
+  }
+  a, button, [role="button"], input[type="submit"], input[type="range"], input[type="checkbox"], input[type="radio"], select, .product-card, .card-media, .card-title, .showcase-image-wrap, .recent-mini-card, [data-inspect] {
+    cursor: pointer !important;
+  }
+  input[type="text"], input[type="search"], input[type="email"], textarea {
+    cursor: text !important;
+  }
+  #terra-cursor-dot {
+    display: none !important;
+  }
+  #terra-cursor-ring {
+    width: 28px !important;
+    height: 28px !important;
+    border: 1px solid var(--accent-forest) !important;
+    opacity: 0.22 !important;
+    pointer-events: none !important;
+    transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                height 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.22s ease,
+                background-color 0.22s ease !important;
+  }
+  body.terra-cursor-hover #terra-cursor-ring {
+    width: 44px !important;
+    height: 44px !important;
+    opacity: 0.45 !important;
+    background-color: var(--accent-forest-soft) !important;
+  }
+
+  /* Disable canvas line clutter completely */
+  #animated-bg-canvas {
+    opacity: 0.12 !important;
+  }
+
+  /* 2. Refined Minimal Announcement Bar */
+  .announcement-bar {
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0.38rem 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.01em;
+  }
+  .announcement-text {
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* 3. Sleek Architectural Header & Floating Nav Pill Dock */
+  .site-header {
+    height: var(--header-height);
+    background: var(--bg-glass-strong);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .header-inner {
+    gap: 1.25rem;
+  }
+  .header-left {
+    gap: 1.5rem;
+  }
+  .primary-nav {
+    background: var(--bg-subtle);
+    padding: 0.26rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border-subtle);
+    gap: 0.15rem !important;
+  }
+  .primary-nav .nav-link {
+    padding: 0.38rem 0.85rem !important;
+    font-size: 0.79rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-radius: var(--radius-pill);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+  }
+  .primary-nav .nav-link:hover {
+    color: var(--text-primary);
+    background: transparent;
+  }
+  .primary-nav .nav-link.active {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    box-shadow: var(--shadow-xs);
+    border-color: var(--border-subtle);
+  }
+  #nav-ecoloop-btn, #nav-gaia-btn {
+    margin-left: 0.2rem;
+    padding: 0.36rem 0.78rem !important;
+    font-size: 0.78rem !important;
+  }
+
+  .header-search {
+    max-width: 280px;
+    transition: max-width 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .header-search:focus-within {
+    max-width: 340px;
+  }
+  .search-input {
+    background: var(--bg-subtle);
+    border-color: transparent;
+    font-size: 0.81rem;
+    padding: 0.46rem 3rem 0.46rem 2.15rem;
+    transition: all 0.2s ease;
+  }
+  .search-input:focus {
+    background: var(--bg-elevated);
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-xs);
+  }
+
+  /* 4. Multi-Page View Router System */
+  main#main-content {
+    min-height: calc(100vh - var(--header-height) - 180px);
+    position: relative;
+  }
+  .terra-page-section {
+    display: none !important;
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  .terra-page-section.terra-page-active {
+    display: block !important;
+    animation: terraPageEnter 0.42s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes terraPageEnter {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Bespoke Editorial Page Headers for Individual Pages */
+  .terra-page-banner {
+    padding: 3rem 0 2rem;
+    border-bottom: 1px solid var(--border-subtle);
+    background: linear-gradient(180deg, var(--bg-subtle) 0%, var(--bg-primary) 100%);
+    margin-bottom: 2rem;
+  }
+  .terra-page-banner-inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .terra-page-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent-forest);
+    margin-bottom: 0.6rem;
+  }
+  .terra-page-heading {
+    font-family: var(--font-serif);
+    font-size: clamp(2.25rem, 3.8vw, 3.35rem);
+    font-weight: 400;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+  .terra-page-sub {
+    font-size: 0.96rem;
+    color: var(--text-secondary);
+    max-width: 54ch;
+    line-height: 1.6;
+  }
+
+  /* 5. Page 1: Home View (Hero + Architectural Portal Bento + Curated Highlights) */
+  .hero-section {
+    padding: 3.5rem 0 3rem !important;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .hero-grid {
+    gap: 3.5rem !important;
+  }
+  .hero-description {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    margin-bottom: 1.75rem;
+  }
+  .showcase-card {
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-md) !important;
+  }
+
+  /* Home Experience Bento Portals */
+  .terra-home-hub {
+    padding: 3.5rem 0;
+  }
+  .terra-hub-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 1.75rem;
+    flex-wrap: wrap;
+  }
+  .terra-portal-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.35rem;
+    margin-bottom: 3.5rem;
+  }
+  .terra-portal-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.4rem;
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .terra-portal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-forest);
+  }
+  .terra-portal-num {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--accent-forest);
+    background: var(--accent-forest-soft);
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill);
+    width: fit-content;
+  }
+  .terra-portal-card h3 {
+    font-family: var(--font-serif);
+    font-size: 1.65rem;
+    font-weight: 400;
+    line-height: 1.15;
+    margin: 0.6rem 0 0.45rem;
+  }
+  .terra-portal-card p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .terra-portal-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .terra-portal-card:hover .terra-portal-link {
+    color: var(--accent-forest);
+  }
+
+  /* 6. Page 2: Shop Catalogue Refinements */
+  .categories-section {
+    position: sticky;
+    top: var(--header-height);
+    z-index: 85;
+    padding: 0.85rem 0;
+    background: var(--bg-glass-strong);
+    backdrop-filter: blur(16px);
+  }
+  .shop-section {
+    padding: 2.25rem 0 4rem !important;
+  }
+  .shop-layout {
+    grid-template-columns: 240px 1fr !important;
+    gap: 2.5rem !important;
+  }
+  .filters-sidebar {
+    background: var(--bg-elevated) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 1.35rem !important;
+    top: calc(var(--header-height) + 64px) !important;
+  }
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(275px, 1fr)) !important;
+    gap: 1.75rem !important;
+  }
+  .product-card {
+    border-radius: var(--radius-md) !important;
+    border: 1px solid var(--border-subtle) !important;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 0.2s ease !important;
+  }
+  .card-media {
+    aspect-ratio: 1 / 1 !important;
+  }
+  .card-body {
+    padding: 1.2rem !important;
+    gap: 0.5rem !important;
+  }
+  .card-title {
+    font-size: 1.02rem !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em;
+  }
+  .card-footer {
+    padding-top: 0.85rem !important;
+    margin-top: 0.65rem !important;
+  }
+
+  /* 7. Page 3: Ritual Kit Studio Full-Page Styling */
+  .ritual-architect-section {
+    padding: 0 0 4.5rem !important;
+    background: var(--bg-primary) !important;
+    border: none !important;
+  }
+  .ritual-architect-card {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 2.25rem !important;
+    border-radius: var(--radius-lg) !important;
+    background: var(--bg-elevated) !important;
+    box-shadow: var(--shadow-sm) !important;
+  }
+  .terra-ritual-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    max-width: 1040px;
+    margin: 0 auto 1.75rem;
+  }
+  .terra-step-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+  .terra-step-num {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent-forest);
+    background: var(--accent-forest-soft);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* 8. Page 4, 5, 6: Standards, FAQ, Makers Dedicated Page Layouts */
+  .purpose-section, .faq-section, .makers-section {
+    padding: 0 0 4.5rem !important;
+    background: var(--bg-primary) !important;
+    border-top: none !important;
+  }
+  .pillar-card {
+    padding: 1.75rem !important;
+    border-radius: var(--radius-lg) !important;
+  }
+  .faq-list {
+    max-width: 960px !important;
+    margin: 0 auto;
+  }
+  .makers-grid {
+    max-width: 1120px;
+    margin: 0 auto;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-xs);
+  }
+
+  /* 9. Floating Capsule Comparison Tray (Eliminates Full-Width Bottom Bar Clutter) */
+  .comparison-tray {
+    left: 50% !important;
+    right: auto !important;
+    bottom: 1.25rem !important;
+    transform: translateX(-50%);
+    width: fit-content;
+    max-width: min(920px, 94vw);
+    border: 1px solid var(--border-strong) !important;
+    border-radius: var(--radius-pill) !important;
+    padding: 0.5rem 0.9rem !important;
+    background: var(--bg-glass-strong) !important;
+    box-shadow: var(--shadow-lg) !important;
+  }
+  .comparison-tray .container {
+    padding: 0 !important;
+  }
+
+  /* 10. Mobile Bottom Tab Bar for Effortless Page Switching */
+  .terra-mobile-tabbar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 62px;
+    background: var(--bg-glass-strong);
+    backdrop-filter: blur(18px);
+    border-top: 1px solid var(--border-subtle);
+    z-index: 230;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 0.35rem;
+  }
+  .terra-mob-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    padding: 0.35rem 0.5rem;
+    border-radius: var(--radius-xs);
+  }
+  .terra-mob-tab.active {
+    color: var(--accent-forest);
+    font-weight: 700;
+  }
+
+  @media (max-width: 960px) {
+    .terra-portal-grid, .terra-ritual-steps {
+      grid-template-columns: 1fr;
+    }
+    .terra-mobile-tabbar {
+      display: flex;
+    }
+    body {
+      padding-bottom: 66px;
+    }
+    .gaia-fab {
+      bottom: 4.6rem !important;
+    }
+    .comparison-tray {
+      bottom: 4.5rem !important;
+      border-radius: var(--radius-md) !important;
+    }
+  }
+</style>
+
+<script id="terra-part2-sleek-pages-script">
+  window.addEventListener("DOMContentLoaded", () => {
+    /* ==========================================================================
+       1. FIX HARDCODED CURSOR ARTIFACTS & SMOOTH RING FOLLOWER
+       ========================================================================== */
+    document.querySelectorAll("#terra-cursor-dot, #terra-cursor-ring").forEach(el => el.remove());
+    if (window.matchMedia("(pointer: fine)").matches) {
+      const ring = document.createElement("div");
+      ring.id = "terra-cursor-ring";
+      document.body.appendChild(ring);
+      let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+      let rx = mx, ry = my;
+      window.addEventListener("mousemove", (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+      }, { passive: true });
+      const tickRing = () => {
+        rx += (mx - rx) * 0.22;
+        ry += (my - ry) * 0.22;
+        ring.style.left = rx + "px";
+        ring.style.top = ry + "px";
+        requestAnimationFrame(tickRing);
+      };
+      requestAnimationFrame(tickRing);
+    }
+
+    /* ==========================================================================
+       2. FIX UNWIRED CONTROLS (GAIA CLOSE, ⌘K SEARCH, MOBILE FILTERS)
+       ========================================================================== */
+    const closeGaiaPanel = () => {
+      TerraSound?.playWhoosh?.(false);
+      document.getElementById("gaia-panel")?.classList.add("hidden");
+      document.getElementById("gaia-backdrop")?.classList.add("hidden");
+    };
+    document.getElementById("gaia-close-btn")?.addEventListener("click", closeGaiaPanel);
+    document.getElementById("gaia-backdrop")?.addEventListener("click", closeGaiaPanel);
+
+    // Wire Gaia Vision Camera Upload Button
+    const attachImgBtn = document.getElementById("gaia-attach-image-btn");
+    const imgInput = document.getElementById("gaia-image-upload");
+    if (attachImgBtn && imgInput) {
+      attachImgBtn.addEventListener("click", () => imgInput.click());
+      imgInput.addEventListener("change", (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        handleGaiaSubmit(`I uploaded a photo (${file.name}). Suggest the most durable reusable TERRA alternative for this everyday item.`);
+        imgInput.value = "";
+      });
+    }
+
+    // Wire Mobile Filter Sidebar
+    const filtersSidebar = document.getElementById("filters-sidebar");
+    document.getElementById("open-mobile-filters-btn")?.addEventListener("click", () => {
+      filtersSidebar?.classList.add("mobile-open");
+    });
+    document.getElementById("close-mobile-filters-btn")?.addEventListener("click", () => {
+      filtersSidebar?.classList.remove("mobile-open");
+    });
+
+    // Wire ⌘K / Ctrl+K Global Search Shortcut + Escape key for all modals/drawers
+    window.addEventListener("keydown", (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        navigateToPage("shop", false);
+        const searchEl = document.getElementById("global-search-input");
+        searchEl?.focus();
+        searchEl?.select();
+      } else if (e.key === "Escape") {
+        closeGaiaPanel();
+        document.getElementById("product-modal-backdrop")?.classList.add("hidden");
+        document.getElementById("compare-modal-backdrop")?.classList.add("hidden");
+        document.getElementById("rewards-modal-backdrop")?.classList.add("hidden");
+        document.getElementById("methodology-modal-backdrop")?.classList.add("hidden");
+        document.getElementById("checkout-modal-backdrop")?.classList.add("hidden");
+        document.getElementById("cart-drawer")?.classList.add("hidden");
+        document.getElementById("cart-backdrop")?.classList.add("hidden");
+        document.getElementById("wishlist-drawer")?.classList.add("hidden");
+        document.getElementById("wishlist-backdrop")?.classList.add("hidden");
+        filtersSidebar?.classList.remove("mobile-open");
+      }
+    });
+
+    /* ==========================================================================
+       3. BUILD DEDICATED MULTI-PAGE SPA ARCHITECTURE
+       ========================================================================== */
+    const heroSection = document.querySelector(".hero-section");
+    const categoriesBar = document.getElementById("categories-bar");
+    const ritualSection = document.getElementById("ritual-architect-section");
+    const shopSection = document.getElementById("shop-section");
+    const recentSection = document.getElementById("recently-viewed-section");
+    const purposeSection = document.getElementById("purpose-section");
+    const faqSection = document.getElementById("faq-section");
+    const makersSection = document.getElementById("makers-section");
+
+    // 3A. Create Home Experience Portal & Featured Shelf inside Hero Page
+    if (heroSection && !document.getElementById("terra-home-hub")) {
+      const homeHub = document.createElement("div");
+      homeHub.id = "terra-home-hub";
+      homeHub.className = "terra-home-hub container";
+      homeHub.innerHTML = `
+        <div class="terra-hub-header">
+          <div>
+            <span class="terra-page-kicker">01 • ARCHITECTURAL DIRECTORY</span>
+            <h2 class="section-title" style="margin-top:0.15rem;">Explore by Experience</h2>
+          </div>
+          <p style="font-size:0.88rem;color:var(--text-secondary);max-width:44ch;">
+            Every department is housed in its own dedicated space—from our 16-piece material archive to bespoke AI curation.
+          </p>
+        </div>
+
+        <div class="terra-portal-grid">
+          <article class="terra-portal-card" data-goto-page="shop">
+            <div>
+              <span class="terra-portal-num">ARCHIVE • 16 GOODS</span>
+              <h3>The Material Catalogue</h3>
+              <p>Filter and compare everyday essentials crafted from 18/8 stainless steel, borosilicate glass, FSC timber, and natural fibers.</p>
+            </div>
+            <div class="terra-portal-link">Enter Storefront <span>→</span></div>
+          </article>
+
+          <article class="terra-portal-card" data-goto-page="rituals">
+            <div>
+              <span class="terra-portal-num">AI STUDIO • BESPOKE</span>
+              <h3>Ritual Kit Architect</h3>
+              <p>Describe your daily routine or gifting occasion and let Gaia AI synthesize a custom 3-item kit tailored to your budget.</p>
+            </div>
+            <div class="terra-portal-link">Launch Kit Studio <span>→</span></div>
+          </article>
+
+          <article class="terra-portal-card" data-goto-page="purpose">
+            <div>
+              <span class="terra-portal-num">STANDARDS • 0–100 AUDIT</span>
+              <h3>Purpose &amp; Repairability</h3>
+              <p>Inspect how we audit material longevity, 10-year spare part availability, and mono-material recyclability.</p>
+            </div>
+            <div class="terra-portal-link">Read Standards <span>→</span></div>
+          </article>
+        </div>
+
+        <div class="terra-hub-header" style="margin-bottom:1.25rem;">
+          <div>
+            <span class="terra-page-kicker">02 • SIGNATURE PIECES</span>
+            <h2 class="section-title" style="margin-top:0.15rem;">Highest-Scoring Essentials</h2>
+          </div>
+          <button type="button" class="btn btn-secondary" data-goto-page="shop">View Full Archive (16) →</button>
+        </div>
+        <div class="product-grid" id="terra-home-featured-grid"></div>
+      `;
+      heroSection.appendChild(homeHub);
+
+      // Render top 4 highest Purpose Score items on Home page
+      const topFour = [...CATALOGUE].sort((a, b) => b.ecoScore - a.ecoScore).slice(0, 4);
+      const homeGrid = homeHub.querySelector("#terra-home-featured-grid");
+      if (homeGrid) {
+        homeGrid.innerHTML = topFour.map(p => `
+          <article class="product-card">
+            <div class="card-media" data-home-inspect="${p.id}">
+              <img src="${p.image}" alt="${p.name}" class="card-img" loading="lazy" />
+              <div class="card-top-badges">
+                <span class="purpose-score-pill">Purpose <strong>${p.ecoScore}</strong></span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="card-cat-row"><span>${p.category}</span><span>${p.materials}</span></div>
+              <h3 class="card-title" data-home-inspect="${p.id}">${p.name}</h3>
+              <p class="card-desc">${p.shortDescription}</p>
+              <div class="card-footer">
+                <span class="card-price">₹${p.price}</span>
+                <div class="card-actions">
+                  <button type="button" class="btn btn-sm btn-secondary" data-home-inspect="${p.id}">Inspect</button>
+                  <button type="button" class="btn btn-sm btn-primary" data-home-add="${p.id}">+ Add</button>
+                </div>
+              </div>
+            </div>
+          </article>
+        `).join("");
+        homeGrid.querySelectorAll("[data-home-inspect]").forEach(el => {
+          el.addEventListener("click", () => openProductModal(el.dataset.homeInspect));
+        });
+        homeGrid.querySelectorAll("[data-home-add]").forEach(btn => {
+          btn.addEventListener("click", (e) => addToCart(btn.dataset.homeAdd, e));
+        });
+      }
+    }
+
+    // 3B. Inject Editorial Page Banners into Dedicated Pages
+    const prependPageBanner = (sectionEl, kicker, heading, subtitle, actionHtml = "") => {
+      if (!sectionEl || sectionEl.querySelector(".terra-page-banner")) return;
+      const banner = document.createElement("div");
+      banner.className = "terra-page-banner";
+      banner.innerHTML = `
+        <div class="container terra-page-banner-inner">
+          <div>
+            <div class="terra-page-kicker">${kicker}</div>
+            <h1 class="terra-page-heading">${heading}</h1>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:0.75rem;">
+            <p class="terra-page-sub">${subtitle}</p>
+            ${actionHtml}
+          </div>
+        </div>
+      `;
+      sectionEl.insertBefore(banner, sectionEl.firstChild);
+    };
+
+    // Move Categories Bar & Recently Viewed inside Shop Section so Shop is a cohesive self-contained page
+    if (shopSection && categoriesBar) {
+      shopSection.insertBefore(categoriesBar, shopSection.firstChild);
+      prependPageBanner(
+        shopSection,
+        "ARCHIVE • 16 VETTED ESSENTIALS",
+        "The Material Catalogue",
+        "Filter by material honesty, use case, and internal Purpose Score. Every piece is backed by 10-year spare parts support."
+      );
+      if (recentSection) {
+        shopSection.appendChild(recentSection);
+      }
+    }
+
+    if (ritualSection) {
+      const container = ritualSection.querySelector(".container");
+      if (container && !ritualSection.querySelector(".terra-ritual-steps")) {
+        const steps = document.createElement("div");
+        steps.className = "terra-ritual-steps";
+        steps.innerHTML = `
+          <div class="terra-step-card">
+            <span class="terra-step-num">01</span>
+            <div><strong style="font-size:0.86rem;">Describe Your Routine</strong><p style="font-size:0.78rem;color:var(--text-secondary);margin-top:0.15rem;">Morning coffee, student desk, commuter carry, or evening wind-down.</p></div>
+          </div>
+          <div class="terra-step-card">
+            <span class="terra-step-num">02</span>
+            <div><strong style="font-size:0.86rem;">Set Your Budget Ceiling</strong><p style="font-size:0.78rem;color:var(--text-secondary);margin-top:0.15rem;">Gaia strictly verifies that all 3 pieces stay within your selected limit.</p></div>
+          </div>
+          <div class="terra-step-card">
+            <span class="terra-step-num">03</span>
+            <div><strong style="font-size:0.86rem;">1-Click Bundle Addition</strong><p style="font-size:0.78rem;color:var(--text-secondary);margin-top:0.15rem;">Inspect each item's role and add the complete 3-piece kit to your cart.</p></div>
+          </div>
+        `;
+        container.insertBefore(steps, container.firstChild);
+      }
+      prependPageBanner(
+        ritualSection,
+        "BESPOKE CURATION • POWERED BY GAIA AI",
+        "Ritual Kit Studio",
+        "Design a custom 3-piece daily kit tailored to your lifestyle and budget ceiling."
+      );
+    }
+
+    if (purposeSection) {
+      prependPageBanner(
+        purposeSection,
+        "TRANSPARENCY • VERIFIED LONGEVITY",
+        "Purpose Score &amp; Standards",
+        "Every object in the TERRA archive is audited across four weighted engineering pillars before it is admitted to our catalogue.",
+        `<button type="button" class="btn btn-secondary btn-sm" id="open-purpose-methodology-btn">Inspect Full Scoring Methodology →</button>`
+      );
+      document.getElementById("open-purpose-methodology-btn")?.addEventListener("click", () => {
+        document.getElementById("methodology-modal-backdrop")?.classList.remove("hidden");
+      });
+    }
+
+    if (faqSection) {
+      prependPageBanner(
+        faqSection,
+        "CARE ARCHIVE &amp; LIVE AI",
+        "Knowledge Base &amp; Care Guide",
+        "Learn how to season cast iron, care for beeswax wraps, request replacement gaskets, or ask Aether AI a custom care question."
+      );
+    }
+
+    if (makersSection) {
+      prependPageBanner(
+        makersSection,
+        "ARTISAN CONCIERGE • SPARE PARTS DESK",
+        "Connect with the Makers",
+        "Order replacement silicone gaskets, fountain pen converters, or inquire about custom institutional and corporate gifting."
+      );
+    }
+
+    /* ==========================================================================
+       4. ADD "HOME" TO PRIMARY NAV & BUILD MOBILE TAB BAR
+       ========================================================================== */
+    const primaryNav = document.querySelector(".primary-nav");
+    if (primaryNav && !primaryNav.querySelector('[data-nav="home"]')) {
+      const homeLink = document.createElement("a");
+      homeLink.href = "#home";
+      homeLink.className = "nav-link active";
+      homeLink.dataset.nav = "home";
+      homeLink.textContent = "Home";
+      primaryNav.insertBefore(homeLink, primaryNav.firstChild);
+    }
+
+    if (!document.getElementById("terra-mobile-tabbar")) {
+      const mobBar = document.createElement("nav");
+      mobBar.id = "terra-mobile-tabbar";
+      mobBar.className = "terra-mobile-tabbar";
+      mobBar.setAttribute("aria-label", "Mobile Page Navigation");
+      mobBar.innerHTML = `
+        <button type="button" class="terra-mob-tab active" data-goto-page="home"><span>⌂</span><span>Home</span></button>
+        <button type="button" class="terra-mob-tab" data-goto-page="shop"><span>❖</span><span>Shop</span></button>
+        <button type="button" class="terra-mob-tab" data-goto-page="rituals"><span>✦</span><span>Kit Studio</span></button>
+        <button type="button" class="terra-mob-tab" data-goto-page="purpose"><span>◎</span><span>Standards</span></button>
+        <button type="button" class="terra-mob-tab" data-goto-page="faq"><span>?</span><span>FAQ</span></button>
+        <button type="button" class="terra-mob-tab" data-goto-page="makers"><span>✉</span><span>Makers</span></button>
+      `;
+      document.body.appendChild(mobBar);
+    }
+
+    /* ==========================================================================
+       5. SPA ROUTER CONTROLLER
+       ========================================================================== */
+    const PAGE_MAP = {
+      home: heroSection,
+      shop: shopSection,
+      rituals: ritualSection,
+      purpose: purposeSection,
+      faq: faqSection,
+      makers: makersSection
+    };
+
+    Object.values(PAGE_MAP).forEach(sec => {
+      if (sec) sec.classList.add("terra-page-section");
+    });
+
+    let currentPage = "home";
+
+    function navigateToPage(pageKey, shouldScrollTop = true) {
+      const targetKey = PAGE_MAP[pageKey] ? pageKey : "home";
+      currentPage = targetKey;
+
+      Object.entries(PAGE_MAP).forEach(([key, sec]) => {
+        if (!sec) return;
+        if (key === targetKey) {
+          sec.classList.remove("terra-page-active");
+          void sec.offsetWidth;
+          sec.classList.add("terra-page-active");
+        } else {
+          sec.classList.remove("terra-page-active");
+        }
+      });
+
+      // Update Desktop & Mobile Active States
+      document.querySelectorAll(".primary-nav .nav-link[data-nav]").forEach(link => {
+        link.classList.toggle("active", link.dataset.nav === targetKey);
+      });
+      document.querySelectorAll(".terra-mob-tab[data-goto-page]").forEach(tab => {
+        tab.classList.toggle("active", tab.dataset.gotoPage === targetKey);
+      });
+
+      if (history.replaceState) {
+        history.replaceState(null, "", `#${targetKey}`);
+      }
+      if (shouldScrollTop) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    // Wire Brand Logo to Home
+    const brandLogo = document.querySelector(". site-header .brand-logo") || document.querySelector(".brand-logo");
+    brandLogo?.addEventListener("click", (e) => {
+      e.preventDefault();
+      TerraSound?.playTap?.(520);
+      navigateToPage("home");
+    });
+
+    // Wire Primary Nav Links
+    document.querySelectorAll(".primary-nav .nav-link[data-nav]").forEach(link => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        TerraSound?.playTap?.(540);
+        navigateToPage(link.dataset.nav);
+      });
+    });
+
+    // Wire Any [data-goto-page] Trigger (Portals, Mobile Tabbar, CTA Buttons)
+    document.querySelectorAll("[data-goto-page]").forEach(el => {
+      el.addEventListener("click", (e) => {
+        e.preventDefault();
+        TerraSound?.playTap?.(540);
+        navigateToPage(el.dataset.gotoPage);
+      });
+    });
+
+    // Intercept Legacy Anchor Links (#shop-section, #ritual-architect-section, etc.) in Hero & Footer
+    const ANCHOR_TO_PAGE = {
+      "#home": "home",
+      "#shop-section": "shop",
+      "#ritual-architect-section": "rituals",
+      "#purpose-section": "purpose",
+      "#faq-section": "faq",
+      "#makers-section": "makers"
+    };
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      const href = a.getAttribute("href");
+      if (ANCHOR_TO_PAGE[href]) {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          TerraSound?.playTap?.(540);
+          navigateToPage(ANCHOR_TO_PAGE[href]);
+        });
+      }
+    });
+
+    // Auto-route to Shop page when user types in Global Search Input
+    const globalSearch = document.getElementById("global-search-input");
+    globalSearch?.addEventListener("input", () => {
+      if (currentPage !== "shop") {
+        navigateToPage("shop", false);
+      }
+    });
+
+    // Auto-route to Shop page when clicking "Use Points in Store" inside EcoLoop 3D
+    document.getElementById("ecoloop-shop-repaired-btn")?.addEventListener("click", () => {
+      navigateToPage("shop", true);
+    });
+
+    // Initialize initial route from URL hash (defaults to sleek Home landing page)
+    const initialHash = window.location.hash.replace("#", "").toLowerCase();
+    const mappedInitial = ANCHOR_TO_PAGE[`#${initialHash}`] || (PAGE_MAP[initialHash] ? initialHash : "home");
+    navigateToPage(mappedInitial, false);
+  });
+</script>
 </body></html>
