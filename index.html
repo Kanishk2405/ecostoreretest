@@ -7800,4 +7800,236 @@
     navigateToPage(mappedInitial, false);
   });
 </script>
+  <!-- ===================== PART 2 (FIXED): MULTI-PAGE SPA ROUTER & HEADER LAYOUT FIX ===================== -->
+<style id="terra-part2-sleek-pages-fix-ui">
+  /* 1. Fix Header Search Bar Squishing & Give Header Full Breathing Room */
+  .site-header .container {
+    max-width: 1440px !important;
+    padding: 0 1.25rem !important;
+    gap: 0.75rem !important;
+  }
+  .header-left {
+    gap: 0.85rem !important;
+    flex-shrink: 0;
+  }
+  .primary-nav {
+    background: var(--bg-subtle);
+    padding: 0.22rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border-subtle);
+    gap: 0.1rem !important;
+  }
+  .primary-nav .nav-link {
+    padding: 0.34rem 0.68rem !important;
+    font-size: 0.76rem !important;
+    font-weight: 600;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+  }
+  .primary-nav .nav-link.active {
+    background: var(--bg-elevated) !important;
+    color: var(--text-primary) !important;
+    box-shadow: var(--shadow-xs);
+  }
+  #nav-ecoloop-btn, #nav-gaia-btn {
+    padding: 0.32rem 0.68rem !important;
+    font-size: 0.75rem !important;
+  }
+  .header-search {
+    flex: 1 1 210px !important;
+    min-width: 185px !important;
+    max-width: 290px !important;
+  }
+  .search-input {
+    width: 100% !important;
+    padding: 0.44rem 2.4rem 0.44rem 2.1rem !important;
+    font-size: 0.8rem !important;
+    background: var(--bg-subtle);
+  }
+  .header-actions {
+    gap: 0.25rem !important;
+    flex-shrink: 0;
+  }
+
+  /* 2. Ensure Active Page Section Always Renders Cleanly */
+  .terra-page-section {
+    display: none !important;
+    opacity: 0;
+  }
+  .terra-page-section.terra-page-active {
+    display: block !important;
+    opacity: 1 !important;
+    transform: none !important;
+    animation: terraPageFadeIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes terraPageFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<script id="terra-part2-sleek-pages-fix-script">
+  (function initTerraMultiPageFix() {
+    function bootRouter() {
+      try {
+        const heroSection = document.querySelector(".hero-section");
+        const categoriesBar = document.getElementById("categories-bar");
+        const ritualSection = document.getElementById("ritual-architect-section");
+        const shopSection = document.getElementById("shop-section");
+        const recentSection = document.getElementById("recently-viewed-section");
+        const purposeSection = document.getElementById("purpose-section");
+        const faqSection = document.getElementById("faq-section");
+        const makersSection = document.getElementById("makers-section");
+
+        // Ensure Categories & Recently Viewed live inside Shop Page
+        if (shopSection && categoriesBar && categoriesBar.parentElement !== shopSection) {
+          const banner = shopSection.querySelector(".terra-page-banner");
+          if (banner && banner.nextSibling) {
+            shopSection.insertBefore(categoriesBar, banner.nextSibling);
+          } else {
+            shopSection.insertBefore(categoriesBar, shopSection.firstChild);
+          }
+        }
+        if (shopSection && recentSection && recentSection.parentElement !== shopSection) {
+          shopSection.appendChild(recentSection);
+        }
+
+        // Ensure "Home" nav link exists in Primary Nav
+        const primaryNav = document.querySelector(".primary-nav");
+        if (primaryNav && !primaryNav.querySelector('[data-nav="home"]')) {
+          const homeLink = document.createElement("a");
+          homeLink.href = "#home";
+          homeLink.className = "nav-link active";
+          homeLink.dataset.nav = "home";
+          homeLink.textContent = "Home";
+          primaryNav.insertBefore(homeLink, primaryNav.firstChild);
+        }
+
+        const PAGE_MAP = {
+          home: heroSection,
+          shop: shopSection,
+          rituals: ritualSection,
+          purpose: purposeSection,
+          faq: faqSection,
+          makers: makersSection
+        };
+
+        Object.values(PAGE_MAP).forEach(sec => {
+          if (sec) sec.classList.add("terra-page-section");
+        });
+
+        let currentPage = "home";
+
+        window.navigateToTerraPage = function(pageKey, shouldScrollTop = true) {
+          const targetKey = PAGE_MAP[pageKey] ? pageKey : "home";
+          currentPage = targetKey;
+
+          Object.entries(PAGE_MAP).forEach(([key, sec]) => {
+            if (!sec) return;
+            if (key === targetKey) {
+              sec.classList.add("terra-page-active");
+            } else {
+              sec.classList.remove("terra-page-active");
+            }
+          });
+
+          document.querySelectorAll(".primary-nav .nav-link[data-nav]").forEach(link => {
+            link.classList.toggle("active", link.dataset.nav === targetKey);
+          });
+          document.querySelectorAll(".terra-mob-tab[data-goto-page]").forEach(tab => {
+            tab.classList.toggle("active", tab.dataset.gotoPage === targetKey);
+          });
+
+          if (history.replaceState) {
+            history.replaceState(null, "", "#" + targetKey);
+          }
+          if (shouldScrollTop) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        };
+
+        // Fixed Brand Logo Selector (No space after dot)
+        const brandLogo = document.querySelector(".site-header .brand-logo") || document.querySelector(".brand-logo");
+        if (brandLogo) {
+          brandLogo.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (typeof TerraSound !== "undefined") TerraSound.playTap(520);
+            window.navigateToTerraPage("home");
+          });
+        }
+
+        // Wire Top Navigation Bar Links
+        document.querySelectorAll(".primary-nav .nav-link[data-nav]").forEach(link => {
+          link.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (typeof TerraSound !== "undefined") TerraSound.playTap(540);
+            window.navigateToTerraPage(link.dataset.nav);
+          });
+        });
+
+        // Wire Portal Cards, Mobile Tabbar & CTA Buttons
+        document.querySelectorAll("[data-goto-page]").forEach(el => {
+          el.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (typeof TerraSound !== "undefined") TerraSound.playTap(540);
+            window.navigateToTerraPage(el.dataset.gotoPage);
+          });
+        });
+
+        // Wire Legacy Anchor Hrefs (#shop-section, etc.)
+        const ANCHOR_TO_PAGE = {
+          "#home": "home",
+          "#shop": "shop",
+          "#shop-section": "shop",
+          "#rituals": "rituals",
+          "#ritual-architect-section": "rituals",
+          "#purpose": "purpose",
+          "#purpose-section": "purpose",
+          "#faq": "faq",
+          "#faq-section": "faq",
+          "#makers": "makers",
+          "#makers-section": "makers"
+        };
+
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+          const href = a.getAttribute("href");
+          if (ANCHOR_TO_PAGE[href]) {
+            a.addEventListener("click", (e) => {
+              e.preventDefault();
+              if (typeof TerraSound !== "undefined") TerraSound.playTap(540);
+              window.navigateToTerraPage(ANCHOR_TO_PAGE[href]);
+            });
+          }
+        });
+
+        // Auto-switch to Shop Page when typing in search bar
+        const globalSearch = document.getElementById("global-search-input");
+        if (globalSearch) {
+          globalSearch.addEventListener("input", () => {
+            if (currentPage !== "shop") {
+              window.navigateToTerraPage("shop", false);
+            }
+          });
+        }
+
+        // Activate Initial Page Immediately
+        const rawHash = (window.location.hash || "#home").toLowerCase();
+        const startPage = ANCHOR_TO_PAGE[rawHash] || "home";
+        window.navigateToTerraPage(startPage, false);
+
+      } catch (err) {
+        console.error("Router recovery fallback:", err);
+        document.querySelectorAll(".terra-page-section").forEach(sec => {
+          sec.classList.add("terra-page-active");
+        });
+      }
+    }
+
+    if (document.readyState === "loading") {
+      window.addEventListener("DOMContentLoaded", bootRouter);
+    } else {
+      bootRouter();
+    }
+  })();
+</script>
 </body></html>
