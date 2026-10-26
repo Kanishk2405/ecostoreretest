@@ -1,15 +1,9 @@
 const MODEL_CASCADE = [
-  "gemini-3.5-flash-lite",
-  "gemini-3.5-flash",
-  "gemini-3-flash-preview"
-];
-const LEGACY_MODEL_ALIASES = new Set([
   "gemini-2.5-flash-lite",
   "gemini-2.5-flash",
-  "gemini-2.0-flash",
-  "gemini-2.0-flash-lite"
-]);
-const DEFAULT_MODEL = "gemini-3.5-flash-lite";
+  "gemini-3-flash-preview"
+];
+const DEFAULT_MODEL = "gemini-2.5-flash-lite";
 
 export default async function handler(req, res) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -43,9 +37,8 @@ export default async function handler(req, res) {
   }
   body = body || {};
 
-  const rawRequested = typeof body.model === "string" ? body.model.trim() : "";
-  const primaryModel = !rawRequested || LEGACY_MODEL_ALIASES.has(rawRequested) ? DEFAULT_MODEL : rawRequested;
-  const modelsToTry = [primaryModel, ...MODEL_CASCADE.filter(m => m !== primaryModel)];
+  // Always try the fastest working model first
+  const modelsToTry = [...MODEL_CASCADE];
 
   let lastStatus = 502;
   let lastMsg = "";
