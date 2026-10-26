@@ -1,8 +1,9 @@
 const MODEL_CASCADE = [
-  "gemini-1.5-flash",
-  "gemini-1.5-pro"
+  "gemini-2.5-flash-lite",
+  "gemini-2.5-flash",
+  "gemini-3-flash-preview"
 ];
-const DEFAULT_MODEL = "gemini-1.5-flash";
+const DEFAULT_MODEL = "gemini-2.5-flash-lite";
 
 export default async function handler(req, res) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -36,6 +37,7 @@ export default async function handler(req, res) {
   }
   body = body || {};
 
+  // Always try the fastest working model first
   const modelsToTry = [...MODEL_CASCADE];
 
   let lastStatus = 502;
