@@ -8744,4 +8744,83 @@
     }
   })();
 </script>
+  <!-- ===================== PART 4: LOCK ALL AI CALLS EXCLUSIVELY TO GEMINI-3.5-FLASH-LITE ===================== -->
+<script id="terra-part4-strict-flash-lite">
+  (function lockToGemini35FlashLite() {
+    const STRICT_MODEL = "gemini-3.5-flash-lite";
+
+    // Update UI badge in Gaia header to confirm strict model lock
+    const badge = document.querySelector(".gaia-status-badge");
+    if (badge) badge.textContent = "Gemini 3.5 Flash-Lite";
+
+    // Override requestGeminiContent globally so it ONLY uses gemini-3.5-flash-lite
+    window.requestGeminiContent = async function(payload) {
+      try {
+        const apiRes = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...payload,
+            model: STRICT_MODEL,
+            strictModel: true
+          })
+        });
+
+        const contentType = apiRes.headers.get("content-type") || "";
+        if (contentType.includes("application/json")) {
+          const data = await apiRes.json();
+          if (apiRes.ok && data && data.ok) {
+            return {
+              ok: true,
+              source: "gemini",
+              model: STRICT_MODEL,
+              raw: data
+            };
+          }
+          if (data && data.errorCode) {
+            return {
+              ok: false,
+              errorCode: data.errorCode,
+              status: apiRes.status,
+              message: data.message || `Backend error (${apiRes.status})`
+            };
+          }
+        }
+
+        // If /api/chat is 404 (e.g., local preview), only call gemini-3.5-flash-lite directly (never gemini-3-flash-preview)
+        if (apiRes.status === 404 && typeof apiKey === "string" && apiKey.trim() !== "") {
+          const directUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(STRICT_MODEL)}:generateContent?key=${apiKey}`;
+          const directRes = await fetch(directUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          if (directRes.ok) {
+            const directJson = await directRes.json();
+            return {
+              ok: true,
+              source: "gemini",
+              model: STRICT_MODEL,
+              raw: directJson
+            };
+          }
+        }
+
+        return {
+          ok: false,
+          errorCode: `HTTP_${apiRes.status}`,
+          status: apiRes.status,
+          message: `Server returned HTTP ${apiRes.status} from /api/chat.`
+        };
+      } catch (networkErr) {
+        return {
+          ok: false,
+          errorCode: "NETWORK_UNREACHABLE",
+          status: 0,
+          message: "Unable to reach /api/chat. Check your internet connection or Vercel deployment status."
+        };
+      }
+    };
+  })();
+</script>
 </body></html>
