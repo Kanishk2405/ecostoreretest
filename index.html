@@ -10421,4 +10421,270 @@
     }
   })();
 </script>
+  <!-- ===================== PART 7: SPACIOUS SCROLLABLE LUXURY CHECKOUT OVERHAUL ===================== -->
+<style id="terra-part7-spacious-scrollable-checkout">
+  /* 1. Make Checkout Modal a Sleek, Scrollable Single-Column Luxury Sheet */
+  #checkout-modal-backdrop .modal-container {
+    width: min(640px, 94vw) !important;
+    max-height: 86vh !important;
+    border-radius: 22px !important;
+    background: var(--bg-primary) !important;
+    border: 1px solid var(--border-strong) !important;
+    box-shadow: 0 36px 90px rgba(0, 0, 0, 0.55) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  /* Sticky Header at Top of Popup */
+  #checkout-modal-backdrop .modal-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 20 !important;
+    padding: 1.35rem 2rem !important;
+    background: var(--bg-elevated) !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Smooth Scrollable Body with Generous Padding */
+  #checkout-form-view,
+  #checkout-confirmation-view {
+    padding: 1.75rem 2rem 2.25rem !important;
+    overflow-y: auto !important;
+    max-height: calc(86vh - 78px) !important;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  #checkout-form-view::-webkit-scrollbar {
+    width: 6px;
+  }
+  #checkout-form-view::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 999px;
+  }
+
+  /* Permanently Hide Cluttered Demo Banner */
+  .demo-notice-banner {
+    display: none !important;
+  }
+
+  /* Stack Checkout Form into a Spacious Vertical Flow */
+  #checkout-form.checkout-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.65rem !important;
+  }
+
+  /* Reset Inner Column Boxes into Clean Elevated Cards */
+  #checkout-form.checkout-grid > div:first-child,
+  #checkout-form.checkout-grid > div:last-child {
+    padding: 1.65rem !important;
+    background: var(--bg-elevated) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 16px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.15rem !important;
+    box-shadow: var(--shadow-xs) !important;
+  }
+
+  /* Fix Colliding Section Headers ("01 • DELIVERY CREDENTIALS" + Badge) */
+  .terra-co-section-label {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    gap: 1rem !important;
+    padding-bottom: 0.85rem !important;
+    margin: 0 0 0.25rem 0 !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+    font-family: var(--font-mono) !important;
+    font-size: 0.72rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    color: var(--accent-forest) !important;
+  }
+  .terra-co-section-label span:last-child {
+    font-size: 0.65rem !important;
+    padding: 0.2rem 0.6rem !important;
+    border-radius: 999px !important;
+    background: var(--accent-forest-soft) !important;
+    color: var(--accent-forest) !important;
+    letter-spacing: 0.06em !important;
+  }
+
+  /* Generous Input Field Spacing & Height */
+  #checkout-form .form-field {
+    margin-bottom: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.42rem !important;
+  }
+  #checkout-form .form-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1.1rem !important;
+    margin-bottom: 0 !important;
+  }
+  #checkout-form .form-field label {
+    font-size: 0.73rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
+    color: var(--text-secondary) !important;
+    margin: 0 !important;
+  }
+  #checkout-form .form-field input,
+  #checkout-form .form-field select {
+    height: 46px !important;
+    padding: 0 1rem !important;
+    border-radius: 10px !important;
+    border: 1px solid var(--border-strong) !important;
+    background: var(--bg-primary) !important;
+    font-size: 0.9rem !important;
+    color: var(--text-primary) !important;
+  }
+
+  /* Step 02: Spacious Experience Rating & Review Card */
+  #terra-checkout-extra-controls.terra-checkout-feedback-box {
+    background: var(--bg-primary) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 12px !important;
+    padding: 1.25rem !important;
+    margin-top: 0.35rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.9rem !important;
+  }
+  .terra-co-rating-bar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: wrap !important;
+    gap: 0.75rem !important;
+    background: var(--bg-elevated) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 10px !important;
+    padding: 0.65rem 1rem !important;
+    margin: 0 !important;
+  }
+  .terra-star-picker {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.35rem !important;
+  }
+  .terra-star-btn {
+    font-size: 1.45rem !important;
+  }
+
+  /* Step 03: Promo Code Box & 4-Column Pill Row */
+  .terra-coupon-box {
+    background: var(--bg-primary) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 12px !important;
+    padding: 1.15rem !important;
+    margin: 0 !important;
+  }
+  .terra-coupon-input-row {
+    gap: 0.6rem !important;
+    margin-top: 0.6rem !important;
+  }
+  .terra-coupon-input {
+    height: 42px !important;
+    font-size: 0.84rem !important;
+  }
+  .terra-coupon-chips {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 0.5rem !important;
+    margin-top: 0.75rem !important;
+  }
+  .terra-coupon-chip {
+    padding: 0.42rem 0.3rem !important;
+    font-size: 0.7rem !important;
+    text-align: center !important;
+    border-radius: 8px !important;
+  }
+
+  /* Clean Matching Toggle Cards for Purpose Points & Ecological Contribution */
+  .terra-co-toggles-stack {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+  .terra-co-toggle-pill,
+  #charity-box {
+    background: var(--bg-primary) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 10px !important;
+    padding: 0.85rem 1rem !important;
+    margin: 0 !important;
+  }
+  .charity-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+
+  /* Spacious Order Receipt Box */
+  #checkout-totals-card {
+    background: var(--bg-primary) !important;
+    border: 1px solid var(--border-strong) !important;
+    border-radius: 12px !important;
+    padding: 1.25rem 1.35rem !important;
+    margin: 0 !important;
+  }
+
+  /* Prominent Submit Button */
+  #submit-dopamine-order-btn {
+    height: 52px !important;
+    font-size: 0.96rem !important;
+    font-weight: 800 !important;
+    border-radius: 12px !important;
+    letter-spacing: 0.01em !important;
+  }
+
+  @media (max-width: 640px) {
+    #checkout-modal-backdrop .modal-header {
+      padding: 1rem 1.25rem !important;
+    }
+    #checkout-form-view {
+      padding: 1rem 1.1rem 1.75rem !important;
+    }
+    #checkout-form.checkout-grid > div:first-child,
+    #checkout-form.checkout-grid > div:last-child {
+      padding: 1.15rem !important;
+    }
+    #checkout-form .form-row {
+      grid-template-columns: 1fr !important;
+    }
+    .terra-coupon-chips {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+</style>
+
+<script id="terra-part7-spacious-checkout-script">
+  (function initSpaciousCheckoutHeaderFix() {
+    function polishCheckoutHeaders() {
+      const checkoutForm = document.getElementById("checkout-form");
+      if (!checkoutForm) return;
+      const secondCard = checkoutForm.children[1];
+      if (secondCard && !secondCard.querySelector(".terra-co-section-label")) {
+        const sec3 = document.createElement("div");
+        sec3.className = "terra-co-section-label";
+        sec3.innerHTML = `<span>03 • PERKS, COUPONS &amp; ORDER SUMMARY</span><span>INSTANT SAVINGS</span>`;
+        secondCard.insertBefore(sec3, secondCard.firstChild);
+      }
+    }
+
+    if (document.readyState === "loading") {
+      window.addEventListener("DOMContentLoaded", polishCheckoutHeaders);
+    } else {
+      polishCheckoutHeaders();
+    }
+  })();
+</script>
 </body></html>
