@@ -8823,4 +8823,760 @@
     };
   })();
 </script>
+  <!-- ===================== PART 5: POP-OUT BUG FIX, COUPON CODES, STRICT CHECKOUT & FEEDBACK COUNTER PAGE ===================== -->
+<style id="terra-part5-checkout-coupons-feedback-ui">
+  /* 1. Checkout Coupon & Mandatory Star Rating Box Styling */
+  .terra-coupon-box {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 0.9rem;
+    margin-bottom: 0.85rem;
+  }
+  .terra-coupon-input-row {
+    display: flex;
+    gap: 0.45rem;
+    margin-top: 0.35rem;
+  }
+  .terra-coupon-input {
+    flex: 1;
+    padding: 0.48rem 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-strong);
+    background: var(--bg-elevated);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .terra-coupon-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.55rem;
+  }
+  .terra-coupon-chip {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 0.22rem 0.55rem;
+    border-radius: var(--radius-xs);
+    background: var(--bg-elevated);
+    border: 1px dashed var(--accent-forest);
+    color: var(--accent-forest);
+    transition: all 0.16s ease;
+  }
+  .terra-coupon-chip:hover,
+  .terra-coupon-chip.active {
+    background: var(--accent-forest);
+    color: #fff;
+    border-style: solid;
+  }
+
+  /* Interactive 5-Star Rating Widget */
+  .terra-checkout-feedback-box {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    padding: 0.95rem;
+    margin-top: 0.75rem;
+  }
+  .terra-star-picker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0.35rem 0 0.6rem;
+  }
+  .terra-star-btn {
+    font-size: 1.55rem;
+    line-height: 1;
+    color: var(--border-strong);
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.15s ease;
+    padding: 0 0.1rem;
+  }
+  .terra-star-btn:hover {
+    transform: scale(1.18);
+  }
+  .terra-star-btn.active {
+    color: #F59E0B;
+    text-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
+  }
+  .terra-field-error {
+    border-color: var(--danger-color) !important;
+    box-shadow: 0 0 0 3px rgba(180, 62, 52, 0.15) !important;
+  }
+  .terra-validation-alert {
+    background: rgba(180, 62, 52, 0.1);
+    border: 1px solid var(--danger-color);
+    color: var(--danger-color);
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.55rem 0.75rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.75rem;
+  }
+
+  /* 2. Dedicated Feedback Counter Page Styling */
+  .feedback-counter-section {
+    padding: 0 0 4.5rem !important;
+    background: var(--bg-primary);
+  }
+  .terra-feedback-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.3fr;
+    gap: 1.35rem;
+    margin-bottom: 2.25rem;
+  }
+  .terra-stat-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1.65rem;
+    box-shadow: var(--shadow-xs);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .terra-stat-big {
+    font-family: var(--font-mono);
+    font-size: clamp(2.4rem, 4vw, 3.4rem);
+    font-weight: 800;
+    color: var(--accent-forest);
+    line-height: 1.05;
+    margin: 0.3rem 0;
+  }
+  .terra-rating-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.42rem;
+  }
+  .terra-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.76rem;
+    font-weight: 600;
+  }
+  .terra-bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--bg-subtle);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+  .terra-bar-fill {
+    height: 100%;
+    background: #F59E0B;
+    border-radius: var(--radius-pill);
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .terra-feedback-layout {
+    display: grid;
+    grid-template-columns: 1.35fr 0.85fr;
+    gap: 2rem;
+    align-items: start;
+  }
+  .terra-reviews-wall {
+    display: grid;
+    gap: 1rem;
+  }
+  .terra-review-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-xs);
+  }
+  .terra-review-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.45rem;
+  }
+  .terra-review-stars {
+    color: #F59E0B;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+  }
+  @media (max-width: 960px) {
+    .terra-feedback-stats-grid,
+    .terra-feedback-layout {
+      grid-template-columns: 1fr !important;
+    }
+  }
+</style>
+
+<script id="terra-part5-checkout-coupons-feedback-script">
+  (function initTerraPart5Upgrades() {
+    function bootPart5() {
+      /* ==========================================================================
+         1. FIX DEFAULT POP-OUT BUG ON STARTUP (CLEAR PRE-FILLED COMPARE TRAY & POPOVERS)
+         ========================================================================== */
+      if (typeof state !== "undefined") {
+        // Clear the default prod-01 comparison item so the bottom Compare Tray doesn't pop out on app launch
+        state.compare = [];
+        state.activeCoupon = null;
+        state.checkoutStarRating = 0;
+        state.checkoutFeedbackText = "";
+      }
+      document.getElementById("comparison-tray")?.classList.add("hidden");
+      document.getElementById("theme-studio-popover")?.classList.add("hidden");
+      document.getElementById("gaia-panel")?.classList.add("hidden");
+      document.getElementById("gaia-backdrop")?.classList.add("hidden");
+      if (typeof updateBadges === "function") updateBadges();
+      if (typeof renderProducts === "function") renderProducts();
+
+      /* ==========================================================================
+         2. COUPON CODES & LIVE FEEDBACK STORE
+         ========================================================================== */
+      const VALID_COUPONS = {
+        KANISHK2405: { code: "KANISHK2405", pct: 40, label: "40% OFF Founder Code" },
+        RIYANSH2620: { code: "RIYANSH2620", pct: 40, label: "40% OFF Founder Code" },
+        MAMTAMODERN40: { code: "MAMTAMODERN40", pct: 40, label: "40% OFF Institutional Partner" },
+        ECOAI40: { code: "ECOAI40", pct: 40, label: "40% OFF Gaia Eco Special" }
+      };
+
+      const DEFAULT_REVIEWS = [
+        {
+          id: "rev-1",
+          name: "Ananya Verma",
+          city: "New Delhi",
+          stars: 5,
+          comment: "The Kinto Trail Flask keeps my coffee hot all day on campus and knowing I can order replacement gaskets for 10 years is unmatched.",
+          badge: "Verified Checkout • KANISHK2405",
+          date: "2 days ago"
+        },
+        {
+          id: "rev-2",
+          name: "Rohan Mehta",
+          city: "Mumbai",
+          stars: 5,
+          comment: "Used Gaia's Ritual Kit Studio to build a plastic-free study desk kit. Seamless checkout and thoughtfully packaged.",
+          badge: "Verified Checkout • ECOAI40",
+          date: "Yesterday"
+        },
+        {
+          id: "rev-3",
+          name: "Kabir Singhania",
+          city: "Bengaluru",
+          stars: 4,
+          comment: "The Solid Stainless Steel Bento Box and Cast Iron Skillet feel like true heirloom pieces. Worth every rupee.",
+          badge: "Verified Checkout",
+          date: "Today"
+        }
+      ];
+
+      function getFeedbackList() {
+        try {
+          const saved = localStorage.getItem("terra_community_feedback_v1");
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          }
+        } catch (e) {}
+        return DEFAULT_REVIEWS;
+      }
+
+      function saveFeedbackItem(newReview) {
+        const list = getFeedbackList();
+        list.unshift(newReview);
+        try {
+          localStorage.setItem("terra_community_feedback_v1", JSON.stringify(list));
+        } catch (e) {}
+        renderFeedbackCounterPage();
+      }
+
+      /* ==========================================================================
+         3. INJECT COUPON BOX, STAR RATING & STRICT CREDENTIAL VALIDATION INTO CHECKOUT
+         ========================================================================== */
+      const checkoutName = document.getElementById("checkout-name");
+      const checkoutEmail = document.getElementById("checkout-email");
+      const checkoutCity = document.getElementById("checkout-city");
+      const checkoutAddress = document.getElementById("checkout-address");
+
+      // Clear hardcoded dummy values so user MUST fill their own credentials
+      if (checkoutName) { checkoutName.value = ""; checkoutName.placeholder = "Enter your full name (Required)"; }
+      if (checkoutEmail) { checkoutEmail.value = ""; checkoutEmail.placeholder = "you@example.com (Required)"; }
+      if (checkoutCity) { checkoutCity.value = ""; checkoutCity.placeholder = "e.g., New Delhi • 110001 (Required)"; }
+      if (checkoutAddress) { checkoutAddress.value = ""; checkoutAddress.placeholder = "House/Flat No., Street, Landmark (Required)"; }
+
+      // Inject Coupon Box & Mandatory Star Rating + Feedback Box into Checkout Form
+      const checkoutForm = document.getElementById("checkout-form");
+      if (checkoutForm && !document.getElementById("terra-checkout-extra-controls")) {
+        const leftCol = checkoutForm.children[0];
+        const rightCol = checkoutForm.children[1];
+
+        if (leftCol) {
+          const feedbackBox = document.createElement("div");
+          feedbackBox.id = "terra-checkout-extra-controls";
+          feedbackBox.className = "terra-checkout-feedback-box";
+          feedbackBox.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <label style="font-size:0.82rem;font-weight:800;">Rate Your Experience &amp; Feedback *</label>
+              <span style="font-size:0.68rem;font-weight:700;color:var(--accent-forest);background:var(--accent-forest-soft);padding:0.12rem 0.45rem;border-radius:999px;">Required</span>
+            </div>
+            <div class="terra-star-picker" id="checkout-star-picker" role="radiogroup" aria-label="Star Rating">
+              <button type="button" class="terra-star-btn" data-star-val="1" aria-label="1 Star">★</button>
+              <button type="button" class="terra-star-btn" data-star-val="2" aria-label="2 Stars">★</button>
+              <button type="button" class="terra-star-btn" data-star-val="3" aria-label="3 Stars">★</button>
+              <button type="button" class="terra-star-btn" data-star-val="4" aria-label="4 Stars">★</button>
+              <button type="button" class="terra-star-btn" data-star-val="5" aria-label="5 Stars">★</button>
+              <span id="checkout-star-readout" style="font-size:0.76rem;font-weight:700;color:var(--text-muted);margin-left:0.4rem;">Select 1–5 stars</span>
+            </div>
+            <div class="form-field" style="margin-bottom:0;">
+              <input type="text" id="checkout-feedback-input" placeholder="Share a quick thought on TERRA or your items... *" required />
+            </div>
+          `;
+          leftCol.appendChild(feedbackBox);
+        }
+
+        if (rightCol) {
+          const couponBox = document.createElement("div");
+          couponBox.className = "terra-coupon-box";
+          couponBox.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:0.78rem;font-weight:800;">🏷️ Promo / Coupon Code</span>
+              <span id="terra-coupon-status" style="font-size:0.72rem;font-weight:700;color:var(--accent-forest);">40% OFF Available</span>
+            </div>
+            <div class="terra-coupon-input-row">
+              <input type="text" id="terra-coupon-input" class="terra-coupon-input" placeholder="Enter coupon code..." autocomplete="off" />
+              <button type="button" class="btn btn-sm btn-secondary" id="terra-apply-coupon-btn">Apply</button>
+            </div>
+            <div class="terra-coupon-chips">
+              <button type="button" class="terra-coupon-chip" data-coupon-code="KANISHK2405">KANISHK2405</button>
+              <button type="button" class="terra-coupon-chip" data-coupon-code="RIYANSH2620">RIYANSH2620</button>
+              <button type="button" class="terra-coupon-chip" data-coupon-code="MAMTAMODERN40">MAMTAMODERN40</button>
+              <button type="button" class="terra-coupon-chip" data-coupon-code="ECOAI40">ECOAI40</button>
+            </div>
+          `;
+          const alertBanner = document.createElement("div");
+          alertBanner.id = "checkout-validation-alert";
+          alertBanner.className = "terra-validation-alert hidden";
+          rightCol.insertBefore(couponBox, rightCol.firstChild);
+          rightCol.insertBefore(alertBanner, rightCol.querySelector("#submit-dopamine-order-btn"));
+        }
+      }
+
+      // Override renderCheckoutTotals so Coupon Discounts calculate accurately
+      window.renderCheckoutTotals = function() {
+        const card = document.getElementById("checkout-totals-card");
+        if (!card || typeof state === "undefined") return;
+        const subtotal = state.cart.reduce((sum, item) => {
+          const p = CATALOGUE.find(x => x.id === item.id);
+          return sum + (p ? p.price * item.qty : 0);
+        }, 0);
+
+        const couponObj = state.activeCoupon ? VALID_COUPONS[state.activeCoupon] : null;
+        const couponDiscount = couponObj ? Math.round(subtotal * (couponObj.pct / 100)) : 0;
+
+        const afterCoupon = Math.max(0, subtotal - couponDiscount);
+        const maxPointsDiscount = Math.min(afterCoupon, Math.floor(state.points / 10));
+        const ptsLabel = document.getElementById("checkout-points-label");
+        const ptsDisc = document.getElementById("checkout-points-discount");
+        if (ptsLabel) ptsLabel.textContent = state.points;
+        if (ptsDisc) ptsDisc.textContent = maxPointsDiscount;
+
+        const pointsDiscount = state.redeemPointsInCheckout ? maxPointsDiscount : 0;
+        const charity = state.charityOptIn ? state.charityAmount : 0;
+        const finalTotal = Math.max(0, afterCoupon - pointsDiscount + charity);
+
+        card.innerHTML = `
+          <h3 style="font-size:0.92rem;margin-bottom:0.65rem;">Order Summary</h3>
+          <div style="display:flex;justify-content:space-between;font-size:0.84rem;margin-bottom:0.3rem;">
+            <span>Subtotal</span>
+            <span style="font-family:var(--font-mono);">₹${subtotal}</span>
+          </div>
+          ${couponDiscount > 0 ? `
+            <div style="display:flex;justify-content:space-between;font-size:0.84rem;color:var(--accent-forest);font-weight:700;margin-bottom:0.3rem;">
+              <span>Coupon (${couponObj.code} −${couponObj.pct}%)</span>
+              <span style="font-family:var(--font-mono);">−₹${couponDiscount}</span>
+            </div>
+          ` : ""}
+          ${pointsDiscount > 0 ? `
+            <div style="display:flex;justify-content:space-between;font-size:0.84rem;color:var(--accent-earth);margin-bottom:0.3rem;">
+              <span>Purpose Points Discount</span>
+              <span style="font-family:var(--font-mono);">−₹${pointsDiscount}</span>
+            </div>
+          ` : ""}
+          ${charity > 0 ? `
+            <div style="display:flex;justify-content:space-between;font-size:0.84rem;color:var(--accent-gaia);margin-bottom:0.3rem;">
+              <span>Ecological Contribution</span>
+              <span style="font-family:var(--font-mono);">+₹${charity}</span>
+            </div>
+          ` : ""}
+          <div style="border-top:1px solid var(--border-subtle);margin-top:0.5rem;padding-top:0.5rem;display:flex;justify-content:space-between;font-size:1.08rem;font-weight:800;">
+            <span>Total Payable</span>
+            <span style="font-family:var(--font-mono);color:var(--accent-forest);">₹${finalTotal}</span>
+          </div>
+        `;
+      };
+
+      // Wire Coupon Application Logic
+      function applyCouponCode(rawCode) {
+        const code = String(rawCode || "").trim().toUpperCase();
+        const statusEl = document.getElementById("terra-coupon-status");
+        const inputEl = document.getElementById("terra-coupon-input");
+        if (inputEl) inputEl.value = code;
+
+        if (VALID_COUPONS[code]) {
+          state.activeCoupon = code;
+          if (statusEl) {
+            statusEl.textContent = `✓ ${code} Applied (40% OFF)`;
+            statusEl.style.color = "var(--accent-forest)";
+          }
+          document.querySelectorAll("[data-coupon-code]").forEach(btn => {
+            btn.classList.toggle("active", btn.dataset.couponCode === code);
+          });
+          if (typeof TerraSound !== "undefined") TerraSound.playChime();
+          if (typeof notify === "function") {
+            notify({ title: `Coupon ${code} Applied!`, message: `${VALID_COUPONS[code].label} (−40%)`, type: "points" });
+          }
+        } else {
+          state.activeCoupon = null;
+          if (statusEl) {
+            statusEl.textContent = "✕ Invalid Coupon Code";
+            statusEl.style.color = "var(--danger-color)";
+          }
+          document.querySelectorAll("[data-coupon-code]").forEach(btn => btn.classList.remove("active"));
+          if (typeof TerraSound !== "undefined") TerraSound.playTap(300);
+        }
+        window.renderCheckoutTotals();
+      }
+
+      document.getElementById("terra-apply-coupon-btn")?.addEventListener("click", () => {
+        applyCouponCode(document.getElementById("terra-coupon-input")?.value);
+      });
+      document.querySelectorAll("[data-coupon-code]").forEach(chip => {
+        chip.addEventListener("click", () => applyCouponCode(chip.dataset.couponCode));
+      });
+
+      // Wire Checkout Star Picker
+      const starBtns = document.querySelectorAll("#checkout-star-picker .terra-star-btn");
+      const starReadout = document.getElementById("checkout-star-readout");
+      const STAR_LABELS = ["", "1/5 • Needs Work", "2/5 • Fair", "3/5 • Good", "4/5 • Great", "5/5 • Exceptional!"];
+      starBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const val = Number(btn.dataset.starVal);
+          state.checkoutStarRating = val;
+          starBtns.forEach(b => b.classList.toggle("active", Number(b.dataset.starVal) <= val));
+          if (starReadout) {
+            starReadout.textContent = STAR_LABELS[val];
+            starReadout.style.color = "var(--accent-forest)";
+          }
+          if (typeof TerraSound !== "undefined") TerraSound.playTap(520 + val * 60);
+        });
+      });
+
+      // Intercept Checkout Form Submission in Capture Phase for Strict Validation
+      checkoutForm?.addEventListener("submit", (e) => {
+        const nameVal = checkoutName?.value.trim() || "";
+        const emailVal = checkoutEmail?.value.trim() || "";
+        const cityVal = checkoutCity?.value.trim() || "";
+        const addrVal = checkoutAddress?.value.trim() || "";
+        const fbInput = document.getElementById("checkout-feedback-input");
+        const fbVal = fbInput?.value.trim() || "";
+        const starsVal = state.checkoutStarRating || 0;
+        const alertEl = document.getElementById("checkout-validation-alert");
+
+        [checkoutName, checkoutEmail, checkoutCity, checkoutAddress, fbInput].forEach(el => el?.classList.remove("terra-field-error"));
+
+        let errorMsg = "";
+        if (nameVal.length < 2) {
+          errorMsg = "Please enter your Full Name before placing your order.";
+          checkoutName?.classList.add("terra-field-error");
+          checkoutName?.focus();
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+          errorMsg = "Please enter a valid Email Address.";
+          checkoutEmail?.classList.add("terra-field-error");
+          checkoutEmail?.focus();
+        } else if (cityVal.length < 3) {
+          errorMsg = "Please enter your City and PIN code.";
+          checkoutCity?.classList.add("terra-field-error");
+          checkoutCity?.focus();
+        } else if (addrVal.length < 6) {
+          errorMsg = "Please enter your complete Delivery Address.";
+          checkoutAddress?.classList.add("terra-field-error");
+          checkoutAddress?.focus();
+        } else if (starsVal < 1) {
+          errorMsg = "Please select a 1 to 5 Star Rating for your checkout experience.";
+        } else if (fbVal.length < 3) {
+          errorMsg = "Please write a short feedback note before completing checkout.";
+          fbInput?.classList.add("terra-field-error");
+          fbInput?.focus();
+        }
+
+        if (errorMsg) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          if (alertEl) {
+            alertEl.textContent = "⚠️ " + errorMsg;
+            alertEl.classList.remove("hidden");
+          }
+          if (typeof TerraSound !== "undefined") TerraSound.playTap(280);
+          return false;
+        }
+
+        alertEl?.classList.add("hidden");
+
+        // Validated! Record the review to the live Feedback Counter Page
+        saveFeedbackItem({
+          id: "rev-" + Date.now(),
+          name: nameVal,
+          city: cityVal,
+          stars: starsVal,
+          comment: fbVal,
+          badge: state.activeCoupon ? `Verified Order • ${state.activeCoupon}` : "Verified Order",
+          date: "Just now"
+        });
+      }, true);
+
+      /* ==========================================================================
+         4. BUILD DEDICATED FEEDBACK COUNTER & COMMUNITY REVIEWS PAGE
+         ========================================================================== */
+      const mainContent = document.getElementById("main-content");
+      let feedbackSection = document.getElementById("feedback-counter-section");
+      if (mainContent && !feedbackSection) {
+        feedbackSection = document.createElement("section");
+        feedbackSection.id = "feedback-counter-section";
+        feedbackSection.className = "feedback-counter-section terra-page-section";
+        feedbackSection.innerHTML = `
+          <div class="terra-page-banner">
+            <div class="container terra-page-banner-inner">
+              <div>
+                <div class="terra-page-kicker">VERIFIED COMMUNITY PULSE • LIVE COUNTER</div>
+                <h1 class="terra-page-heading">Customer Feedback &amp; Ratings</h1>
+              </div>
+              <p class="terra-page-sub">
+                Every checkout and studio review is counted in real time. Explore verified ratings or submit your own experience below.
+              </p>
+            </div>
+          </div>
+
+          <div class="container">
+            <div class="terra-feedback-stats-grid">
+              <div class="terra-stat-card">
+                <span class="terra-page-kicker" style="margin-bottom:0.2rem;">TOTAL FEEDBACK COUNTER</span>
+                <div class="terra-stat-big" id="terra-total-feedback-count">0</div>
+                <p style="font-size:0.82rem;color:var(--text-secondary);">Verified customer checkouts &amp; studio dispatches recorded</p>
+              </div>
+
+              <div class="terra-stat-card">
+                <span class="terra-page-kicker" style="margin-bottom:0.2rem;">AVERAGE SATISFACTION</span>
+                <div style="display:flex;align-items:baseline;gap:0.6rem;">
+                  <div class="terra-stat-big" id="terra-avg-star-score">4.9</div>
+                  <span style="font-size:1.3rem;color:#F59E0B;">★★★★★</span>
+                </div>
+                <p style="font-size:0.82rem;color:var(--text-secondary);" id="terra-satisfaction-pct">98% of customers rate TERRA 4 or 5 stars</p>
+              </div>
+
+              <div class="terra-stat-card">
+                <span class="terra-page-kicker" style="margin-bottom:0.55rem;">STAR RATING BREAKDOWN</span>
+                <div class="terra-rating-bars" id="terra-rating-bars"></div>
+              </div>
+            </div>
+
+            <div class="terra-feedback-layout">
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                  <h2 style="font-family:var(--font-serif);font-size:1.75rem;font-weight:400;">Live Feedback Stream</h2>
+                  <span class="card-mini-tag" style="font-family:var(--font-mono);">REAL-TIME ARCHIVE</span>
+                </div>
+                <div class="terra-reviews-wall" id="terra-reviews-wall"></div>
+              </div>
+
+              <div class="makers-studio-card" style="position:sticky;top:calc(var(--header-height) + 1.5rem);">
+                <span class="terra-page-kicker">ADD TO THE COUNTER</span>
+                <h3 style="font-size:1.2rem;margin:0.2rem 0 0.4rem;">Submit a Storefront Review</h3>
+                <p style="font-size:0.82rem;color:var(--text-secondary);margin-bottom:0.85rem;">Share your experience with TERRA's products, Gaia AI, or EcoLoop 3D (+15 Purpose Points).</p>
+                <form id="terra-standalone-feedback-form">
+                  <div class="form-field">
+                    <label>Your Name *</label>
+                    <input type="text" id="fb-page-name" required placeholder="e.g., Meera Krishnan" />
+                  </div>
+                  <div class="form-field">
+                    <label>City *</label>
+                    <input type="text" id="fb-page-city" required placeholder="e.g., New Delhi" />
+                  </div>
+                  <div class="form-field">
+                    <label>Your Star Rating *</label>
+                    <div class="terra-star-picker" id="fb-page-star-picker">
+                      <button type="button" class="terra-star-btn active" data-fb-star="1">★</button>
+                      <button type="button" class="terra-star-btn active" data-fb-star="2">★</button>
+                      <button type="button" class="terra-star-btn active" data-fb-star="3">★</button>
+                      <button type="button" class="terra-star-btn active" data-fb-star="4">★</button>
+                      <button type="button" class="terra-star-btn active" data-fb-star="5">★</button>
+                    </div>
+                  </div>
+                  <div class="form-field">
+                    <label>Your Feedback *</label>
+                    <textarea id="fb-page-comment" class="makers-textarea" required placeholder="What stood out to you about TERRA?"></textarea>
+                  </div>
+                  <button type="submit" class="btn btn-primary btn-full">Post Verified Feedback (+15 Pts)</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        `;
+        mainContent.appendChild(feedbackSection);
+      }
+
+      let pageSelectedStars = 5;
+      document.querySelectorAll("#fb-page-star-picker [data-fb-star]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          pageSelectedStars = Number(btn.dataset.fbStar);
+          document.querySelectorAll("#fb-page-star-picker [data-fb-star]").forEach(b => {
+            b.classList.toggle("active", Number(b.dataset.fbStar) <= pageSelectedStars);
+          });
+          if (typeof TerraSound !== "undefined") TerraSound.playTap(560);
+        });
+      });
+
+      document.getElementById("terra-standalone-feedback-form")?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = document.getElementById("fb-page-name")?.value.trim();
+        const city = document.getElementById("fb-page-city")?.value.trim();
+        const comment = document.getElementById("fb-page-comment")?.value.trim();
+        if (!name || !city || !comment) return;
+
+        saveFeedbackItem({
+          id: "rev-" + Date.now(),
+          name,
+          city,
+          stars: pageSelectedStars,
+          comment,
+          badge: "Community Dispatch",
+          date: "Just now"
+        });
+
+        e.target.reset();
+        if (typeof addPoints === "function") addPoints(15, "Posted Storefront Feedback");
+        if (typeof ConfettiEngine !== "undefined") ConfettiEngine.burst(window.innerWidth / 2, window.innerHeight / 2, 40);
+      });
+
+      function renderFeedbackCounterPage() {
+        const list = getFeedbackList();
+        const total = list.length;
+        const avg = total > 0 ? (list.reduce((s, r) => s + Number(r.stars || 5), 0) / total).toFixed(1) : "5.0";
+        const highCount = list.filter(r => Number(r.stars) >= 4).length;
+        const highPct = total > 0 ? Math.round((highCount / total) * 100) : 100;
+
+        const countEl = document.getElementById("terra-total-feedback-count");
+        const avgEl = document.getElementById("terra-avg-star-score");
+        const pctEl = document.getElementById("terra-satisfaction-pct");
+        const barsEl = document.getElementById("terra-rating-bars");
+        const wallEl = document.getElementById("terra-reviews-wall");
+
+        if (countEl) countEl.textContent = String(total);
+        if (avgEl) avgEl.textContent = avg;
+        if (pctEl) pctEl.textContent = `${highPct}% of reviewers rated TERRA 4 or 5 stars`;
+
+        if (barsEl) {
+          barsEl.innerHTML = [5, 4, 3, 2, 1].map(star => {
+            const c = list.filter(r => Number(r.stars) === star).length;
+            const pct = total > 0 ? Math.round((c / total) * 100) : 0;
+            return `
+              <div class="terra-bar-row">
+                <span style="width:38px;">${star} ★</span>
+                <div class="terra-bar-track"><div class="terra-bar-fill" style="width:${pct}%"></div></div>
+                <span style="width:32px;text-align:right;font-family:var(--font-mono);color:var(--text-muted);">${c}</span>
+              </div>
+            `;
+          }).join("");
+        }
+
+        if (wallEl) {
+          wallEl.innerHTML = list.map(r => `
+            <article class="terra-review-card">
+              <div class="terra-review-top">
+                <div>
+                  <strong style="font-size:0.95rem;">${r.name}</strong>
+                  <span style="font-size:0.76rem;color:var(--text-muted);margin-left:0.4rem;">• ${r.city}</span>
+                </div>
+                <div class="terra-review-stars">${"★".repeat(r.stars)}${"☆".repeat(5 - r.stars)}</div>
+              </div>
+              <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.55;margin-bottom:0.65rem;">"${r.comment}"</p>
+              <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.72rem;color:var(--text-muted);">
+                <span class="card-mini-tag">${r.badge || "Verified"}</span>
+                <span>${r.date || "Recently"}</span>
+              </div>
+            </article>
+          `).join("");
+        }
+      }
+      renderFeedbackCounterPage();
+
+      /* ==========================================================================
+         5. REGISTER "REVIEWS" PAGE IN TOP NAVBAR, MOBILE DOCK & ROUTER
+         ========================================================================== */
+      const primaryNav = document.querySelector(".primary-nav");
+      if (primaryNav && !primaryNav.querySelector('[data-nav="feedback"]')) {
+        const fbLink = document.createElement("a");
+        fbLink.href = "#feedback";
+        fbLink.className = "nav-link";
+        fbLink.dataset.nav = "feedback";
+        fbLink.textContent = "Reviews";
+        const makersLink = primaryNav.querySelector('[data-nav="makers"]');
+        if (makersLink && makersLink.nextSibling) {
+          primaryNav.insertBefore(fbLink, makersLink.nextSibling);
+        } else {
+          primaryNav.appendChild(fbLink);
+        }
+      }
+
+      const mobBar = document.getElementById("terra-mobile-tabbar");
+      if (mobBar && !mobBar.querySelector('[data-goto-page="feedback"]')) {
+        const fbTab = document.createElement("button");
+        fbTab.type = "button";
+        fbTab.className = "terra-mob-tab";
+        fbTab.dataset.gotoPage = "feedback";
+        fbTab.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span>Reviews</span>`;
+        mobBar.appendChild(fbTab);
+      }
+
+      // Extend window.navigateToTerraPage so "feedback" routes cleanly alongside the other 6 pages
+      const ALL_PAGES = {
+        home: document.querySelector(".hero-section"),
+        shop: document.getElementById("shop-section"),
+        rituals: document.getElementById("ritual-architect-section"),
+        purpose: document.getElementById("purpose-section"),
+        faq: document.getElementById("faq-section"),
+        makers: document.getElementById("makers-section"),
+        feedback: feedbackSection
+      };
+
+      window.navigateToTerraPage = function(pageKey, shouldScrollTop = true) {
+        const targetKey = ALL_PAGES[pageKey] ? pageKey : "home";
+        Object.entries(ALL_PAGES).forEach(([key, sec]) => {
+          if (!sec) return;
+          sec.classList.toggle("terra-page-active", key === targetKey);
+        });
+        document.querySelectorAll(".primary-nav .nav-link[data-nav]").forEach(link => {
+          link.classList.toggle("active", link.dataset.nav === targetKey);
+        });
+        document.querySelectorAll(".terra-mob-tab[data-goto-page]").forEach(tab => {
+          tab.classList.toggle("active", tab.dataset.gotoPage === targetKey);
+        });
+        if (targetKey === "feedback") renderFeedbackCounterPage();
+        if (history.replaceState) history.replaceState(null, "", "#" + targetKey);
+        if (shouldScrollTop) window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+
+      document.querySelectorAll('.primary-nav .nav-link[data-nav="feedback"], .terra-mob-tab[data-goto-page="feedback"]').forEach(el => {
+        el.addEventListener("click", (e) => {
+          e.preventDefault();
+          if (typeof TerraSound !== "undefined") TerraSound.playTap(540);
+          window.navigateToTerraPage("feedback");
+        });
+      });
+    }
+
+    if (document.readyState === "loading") {
+      window.addEventListener("DOMContentLoaded", bootPart5);
+    } else {
+      bootPart5();
+    }
+  })();
+</script>
 </body></html>
