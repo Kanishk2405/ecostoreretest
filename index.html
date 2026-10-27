@@ -9890,4 +9890,535 @@
     .ecowild-title-card {
       padding: 1rem !important;
       max-
+      <!-- ===================== PART 6 (COMPLETE): SLEEK SPLIT-PANE CHECKOUT, FAKE REVIEW PURGE & MOBILE 3D ===================== -->
+<style id="terra-part6-complete-ui">
+  /* ==========================================================================
+     1. ULTRA-SLEEK SPLIT-PANE CHECKOUT MODAL (DE-CLUTTERED)
+     ========================================================================== */
+  #checkout-modal-backdrop .modal-container {
+    width: min(880px, 95vw) !important;
+    max-height: 92vh !important;
+    border-radius: 20px !important;
+    background: var(--bg-elevated) !important;
+    border: 1px solid var(--border-strong) !important;
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.45) !important;
+    overflow-y: auto !important;
+  }
+
+  #checkout-modal-backdrop .modal-header {
+    padding: 1.15rem 1.75rem !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+    background: var(--bg-elevated) !important;
+  }
+
+  /* Hide the cluttered Demo Notice banner completely */
+  #checkout-form-view .demo-notice-banner {
+    display: none !important;
+  }
+
+  #checkout-form-view {
+    padding: 0 !important;
+  }
+
+  /* Clean Split-Pane Architecture: Left = Form, Right = Recessed Invoice Console */
+  #checkout-form.checkout-grid {
+    display: grid !important;
+    grid-template-columns: 1.18fr 0.82fr !important;
+    gap: 0 !important;
+    align-items: stretch !important;
+  }
+
+  /* Left Column: Clean Form Pane */
+  #checkout-form.checkout-grid > div:first-child {
+    padding: 1.6rem 1.85rem !important;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  /* Right Column: Recessed Invoice & Promo Sidebar */
+  #checkout-form.checkout-grid > div:last-child {
+    padding: 1.6rem 1.75rem !important;
+    background: var(--bg-primary) !important;
+    border-left: 1px solid var(--border-subtle) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    gap: 1rem !important;
+  }
+
+  .terra-co-section-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-forest);
+    margin: 0.2rem 0 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  #checkout-form .form-row {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.75rem !important;
+  }
+
+  #checkout-form .form-field {
+    margin-bottom: 0.75rem !important;
+  }
+
+  #checkout-form .form-field label {
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-secondary) !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  #checkout-form .form-field input,
+  #checkout-form .form-field select {
+    height: 40px !important;
+    padding: 0 0.85rem !important;
+    border-radius: 8px !important;
+    border: 1px solid var(--border-subtle) !important;
+    background: var(--bg-primary) !important;
+    font-size: 0.84rem !important;
+    color: var(--text-primary) !important;
+    transition: all 0.16s ease !important;
+  }
+
+  #checkout-form .form-field input:focus {
+    border-color: var(--accent-forest) !important;
+    background: var(--bg-elevated) !important;
+    box-shadow: 0 0 0 3px var(--accent-forest-soft) !important;
+    outline: none !important;
+  }
+
+  /* Sleek Inline Star Rating & Feedback Section (No clunky outer box) */
+  .terra-checkout-feedback-box {
+    background: transparent !important;
+    border: none !important;
+    border-top: 1px solid var(--border-subtle) !important;
+    border-radius: 0 !important;
+    padding: 1rem 0 0 !important;
+    margin-top: 0.35rem !important;
+    box-shadow: none !important;
+  }
+
+  .terra-co-rating-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 0.42rem 0.8rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .terra-star-picker {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    gap: 0.2rem !important;
+  }
+
+  .terra-star-btn {
+    font-size: 1.3rem !important;
+  }
+
+  /* Right Pane: Sleek Promo Console & Toggles */
+  .terra-coupon-box {
+    background: var(--bg-elevated) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 10px !important;
+    padding: 0.85rem !important;
+    margin: 0 !important;
+  }
+
+  .terra-coupon-chips {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.35rem !important;
+    margin-top: 0.5rem !important;
+  }
+
+  .terra-coupon-chip {
+    text-align: center;
+    padding: 0.3rem 0.4rem !important;
+    font-size: 0.67rem !important;
+    border-radius: 6px !important;
+  }
+
+  /* Compact Perks & Eco Toggles Docked in Right Summary Column */
+  .terra-co-toggles-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .terra-co-toggle-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 8px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+
+  .terra-co-toggle-pill:hover {
+    border-color: var(--accent-forest);
+  }
+
+  .terra-co-toggle-pill input[type="checkbox"] {
+    width: 15px !important;
+    height: 15px !important;
+    accent-color: var(--accent-forest);
+    margin: 0;
+  }
+
+  /* Hide old charity box styling inside left column */
+  #charity-box {
+    background: var(--bg-elevated) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 8px !important;
+    padding: 0.55rem 0.75rem !important;
+    margin: 0 !important;
+  }
+  #charity-box .charity-desc {
+    display: none !important;
+  }
+
+  #checkout-totals-card {
+    background: var(--bg-elevated) !important;
+    border: 1px solid var(--border-subtle) !important;
+    border-radius: 10px !important;
+    padding: 0.95rem 1rem !important;
+    margin: 0 !important;
+  }
+
+  #submit-dopamine-order-btn {
+    height: 46px !important;
+    font-size: 0.9rem !important;
+    font-weight: 700 !important;
+    border-radius: 10px !important;
+    margin-top: auto !important;
+  }
+
+  /* ==========================================================================
+     2. MOBILE ECOLOOP 3D & RESPONSIVE CHECKOUT (<= 960px)
+     ========================================================================== */
+  @media (max-width: 960px) {
+    #checkout-form.checkout-grid {
+      grid-template-columns: 1fr !important;
+    }
+    #checkout-form.checkout-grid > div:first-child,
+    #checkout-form.checkout-grid > div:last-child {
+      padding: 1.15rem !important;
+      border-left: none !important;
+    }
+    #checkout-form.checkout-grid > div:last-child {
+      border-top: 1px solid var(--border-subtle) !important;
+    }
+    #checkout-form .form-row {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* Full-Screen Phone Optimization for EcoLoop 3D */
+    #ecoloop-modal-backdrop {
+      padding: 0 !important;
+      align-items: stretch !important;
+    }
+    .ecoloop-modal-container {
+      width: 100vw !important;
+      max-width: 100vw !important;
+      height: 100dvh !important;
+      max-height: 100dvh !important;
+      border-radius: 0 !important;
+      border: none !important;
+    }
+    .ecoloop-header {
+      padding: 0.5rem 0.75rem !important;
+      gap: 0.4rem !important;
+    }
+    #ecoloop-modal-title {
+      font-size: 0.88rem !important;
+    }
+    .ecowild-map-pills {
+      width: 100%;
+      overflow-x: auto;
+      padding: 0.2rem !important;
+    }
+    .ecowild-map-pill {
+      flex: 1;
+      text-align: center;
+      font-size: 0.68rem !important;
+      padding: 0.26rem 0.45rem !important;
+      white-space: nowrap;
+    }
+    .ecoloop-layout {
+      grid-template-columns: 1fr !important;
+      padding: 0.55rem !important;
+      gap: 0.65rem !important;
+    }
+    .ecoloop-viewport-wrap {
+      min-height: 290px !important;
+      height: 44dvh !important;
+      max-height: 380px !important;
+      aspect-ratio: auto !important;
+    }
+    .ecoloop-hud-pill {
+      font-size: 0.64rem !important;
+      padding: 0.18rem 0.45rem !important;
+    }
+    .gaia-voice-coach-bar {
+      top: 2.2rem !important;
+      padding: 0.32rem 0.5rem !important;
+    }
+    #gaia-voice-line {
+      font-size: 0.66rem !important;
+    }
+    .ecowild-touch-btn {
+      width: 34px !important;
+      height: 34px !important;
+      font-size: 0.75rem !important;
+    }
+  }
+</style>
+
+<script id="terra-part6-complete-script">
+  (function initTerraPart6Complete() {
+    const FAKE_IDS = new Set(["rev-1", "rev-2", "rev-3"]);
+    const FAKE_NAMES = new Set(["Ananya Verma", "Rohan Mehta", "Kabir Singhania"]);
+    const STORAGE_KEY = "terra_community_feedback_v1";
+
+    /* ==========================================================================
+       1. PURGE ALL FAKE REVIEWS IMMEDIATELY & LOCK TO REAL REVIEWS ONLY
+       ========================================================================== */
+    function getCleanRealReviews() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+          return [];
+        }
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+          return [];
+        }
+        const realOnly = parsed.filter(
+          (r) => r && !FAKE_IDS.has(r.id) && !FAKE_NAMES.has((r.name || "").trim())
+        );
+        if (realOnly.length !== parsed.length) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(realOnly));
+        }
+        return realOnly;
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function renderCleanFeedbackCounterPage() {
+      const list = getCleanRealReviews();
+      const total = list.length;
+      const avg =
+        total > 0
+          ? (list.reduce((s, r) => s + Number(r.stars || 5), 0) / total).toFixed(1)
+          : "0.0";
+      const highCount = list.filter((r) => Number(r.stars) >= 4).length;
+      const highPct = total > 0 ? Math.round((highCount / total) * 100) : 0;
+
+      const countEl = document.getElementById("terra-total-feedback-count");
+      const avgEl = document.getElementById("terra-avg-star-score");
+      const pctEl = document.getElementById("terra-satisfaction-pct");
+      const barsEl = document.getElementById("terra-rating-bars");
+      const wallEl = document.getElementById("terra-reviews-wall");
+
+      if (countEl) countEl.textContent = String(total);
+      if (avgEl) avgEl.textContent = avg;
+      if (pctEl) {
+        pctEl.textContent =
+          total > 0
+            ? `${highPct}% of verified reviewers rated TERRA 4 or 5 stars`
+            : "Awaiting first verified customer review";
+      }
+
+      if (barsEl) {
+        barsEl.innerHTML = [5, 4, 3, 2, 1]
+          .map((star) => {
+            const c = list.filter((r) => Number(r.stars) === star).length;
+            const pct = total > 0 ? Math.round((c / total) * 100) : 0;
+            return `
+              <div class="terra-bar-row">
+                <span style="width:38px;">${star} ★</span>
+                <div class="terra-bar-track"><div class="terra-bar-fill" style="width:${pct}%"></div></div>
+                <span style="width:32px;text-align:right;font-family:var(--font-mono);color:var(--text-muted);">${c}</span>
+              </div>
+            `;
+          })
+          .join("");
+      }
+
+      if (wallEl) {
+        if (list.length === 0) {
+          wallEl.innerHTML = `
+            <div style="background:var(--bg-elevated);border:1px dashed var(--border-strong);border-radius:var(--radius-md);padding:2.25rem;text-align:center;color:var(--text-secondary);">
+              <strong style="font-size:0.95rem;color:var(--text-primary);">0 Verified Reviews Recorded Yet</strong>
+              <p style="font-size:0.82rem;margin-top:0.3rem;">All pre-populated demo reviews have been removed. Complete a checkout or submit the form on the right to record the first real review.</p>
+            </div>
+          `;
+        } else {
+          wallEl.innerHTML = list
+            .map(
+              (r) => `
+              <article class="terra-review-card">
+                <div class="terra-review-top">
+                  <div>
+                    <strong style="font-size:0.95rem;">${r.name}</strong>
+                    <span style="font-size:0.76rem;color:var(--text-muted);margin-left:0.4rem;">• ${r.city}</span>
+                  </div>
+                  <div class="terra-review-stars">${"★".repeat(Number(r.stars) || 5)}${"☆".repeat(5 - (Number(r.stars) || 5))}</div>
+                </div>
+                <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.55;margin-bottom:0.65rem;">"${r.comment}"</p>
+                <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.72rem;color:var(--text-muted);">
+                  <span class="card-mini-tag">${r.badge || "Verified"}</span>
+                  <span>${r.date || "Just now"}</span>
+                </div>
+              </article>
+            `
+            )
+            .join("");
+        }
+      }
+    }
+
+    /* ==========================================================================
+       2. RESTRUCTURE CHECKOUT INTO A SLEEK SPLIT-PANE CONSOLE
+       ========================================================================== */
+    function upgradeCheckoutLayout() {
+      const checkoutForm = document.getElementById("checkout-form");
+      if (!checkoutForm) return;
+      const leftCol = checkoutForm.children[0];
+      const rightCol = checkoutForm.children[1];
+      if (!leftCol || !rightCol) return;
+
+      // Add Section 01 Header to Left Column
+      if (!leftCol.querySelector(".terra-co-section-label")) {
+        const sec1 = document.createElement("div");
+        sec1.className = "terra-co-section-label";
+        sec1.innerHTML = `<span>01 • DELIVERY CREDENTIALS</span><span style="color:var(--text-muted);">REQUIRED</span>`;
+        leftCol.insertBefore(sec1, leftCol.firstChild);
+      }
+
+      // Move Charity Box & Redeem Points Toggle into Right Column so Left Column stays super clean
+      const charityBox = document.getElementById("charity-box");
+      const redeemCheckbox = document.getElementById("redeem-points-checkbox");
+      const redeemFieldWrap = redeemCheckbox ? redeemCheckbox.closest(".form-field") : null;
+      const totalsCard = document.getElementById("checkout-totals-card");
+
+      if (!rightCol.querySelector(".terra-co-toggles-stack")) {
+        const togglesStack = document.createElement("div");
+        togglesStack.className = "terra-co-toggles-stack";
+
+        if (redeemFieldWrap) {
+          redeemFieldWrap.style.margin = "0";
+          const label = redeemFieldWrap.querySelector("label");
+          if (label) label.className = "terra-co-toggle-pill";
+          togglesStack.appendChild(redeemFieldWrap);
+        }
+        if (charityBox) {
+          togglesStack.appendChild(charityBox);
+        }
+
+        if (totalsCard) {
+          rightCol.insertBefore(togglesStack, totalsCard);
+        } else {
+          rightCol.appendChild(togglesStack);
+        }
+      }
+
+      // Clean up the Experience Rating & Feedback Box in Left Column
+      const feedbackBox = document.getElementById("terra-checkout-extra-controls");
+      if (feedbackBox && !feedbackBox.dataset.sleekUpgraded) {
+        feedbackBox.dataset.sleekUpgraded = "true";
+        const starPicker = document.getElementById("checkout-star-picker");
+        const fbInput = document.getElementById("checkout-feedback-input");
+
+        const sec2 = document.createElement("div");
+        sec2.className = "terra-co-section-label";
+        sec2.innerHTML = `<span>02 • EXPERIENCE RATING &amp; REVIEW</span><span style="color:var(--text-muted);">REQUIRED</span>`;
+
+        const ratingBar = document.createElement("div");
+        ratingBar.className = "terra-co-rating-bar";
+        const labelSpan = document.createElement("span");
+        labelSpan.style.cssText = "font-size:0.78rem;font-weight:700;color:var(--text-primary);";
+        labelSpan.textContent = "Your Rating";
+        ratingBar.appendChild(labelSpan);
+        if (starPicker) ratingBar.appendChild(starPicker);
+
+        feedbackBox.innerHTML = "";
+        feedbackBox.appendChild(sec2);
+        feedbackBox.appendChild(ratingBar);
+        if (fbInput) {
+          const fieldWrap = document.createElement("div");
+          fieldWrap.className = "form-field";
+          fieldWrap.style.marginBottom = "0";
+          fieldWrap.appendChild(fbInput);
+          feedbackBox.appendChild(fieldWrap);
+        }
+      }
+    }
+
+    /* ==========================================================================
+       3. RESPONSIVE 3D CANVAS RESIZER FOR MOBILE PHONES
+       ========================================================================== */
+    function initMobile3DResizer() {
+      const wrap = document.getElementById("ecoloop-viewport-wrap");
+      const canvas3d = document.getElementById("ecoloop-3d-canvas");
+      if (!wrap || !canvas3d || typeof ResizeObserver === "undefined") return;
+
+      const ro = new ResizeObserver(() => {
+        window.dispatchEvent(new Event("resize"));
+      });
+      ro.observe(wrap);
+    }
+
+    function bootAll() {
+      // 1. Purge fake reviews immediately on load
+      getCleanRealReviews();
+      renderCleanFeedbackCounterPage();
+
+      // 2. Re-sync review UI after any form submit (Checkout or Standalone Review Form)
+      document.addEventListener("submit", () => {
+        setTimeout(renderCleanFeedbackCounterPage, 30);
+      });
+
+      // 3. Also refresh whenever navigating to Reviews page
+      document.querySelectorAll('[data-nav="feedback"], [data-goto-page="feedback"]').forEach((el) => {
+        el.addEventListener("click", () => setTimeout(renderCleanFeedbackCounterPage, 20));
+      });
+
+      // 4. Upgrade Checkout Modal UI & Mobile 3D Resizer
+      upgradeCheckoutLayout();
+      initMobile3DResizer();
+    }
+
+    if (document.readyState === "loading") {
+      window.addEventListener("DOMContentLoaded", bootAll);
+    } else {
+      bootAll();
+    }
+  })();
+</script>
 </body></html>
