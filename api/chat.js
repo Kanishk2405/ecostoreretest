@@ -1,9 +1,4 @@
-const MODEL_CASCADE = [
-  "gemini-2.5-flash-lite",
-  "gemini-2.5-flash",
-  "gemini-3-flash-preview"
-];
-const DEFAULT_MODEL = "gemini-2.5-flash-lite";
+const STRICT_MODEL = "gemini-3.5-flash-lite";
 
 export default async function handler(req, res) {
   res.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -37,39 +32,49 @@ export default async function handler(req, res) {
   }
   body = body || {};
 
-  // Always try the fastest working model first
-  const modelsToTry = [...MODEL_CASCADE];
+  const endpoint =
+    "https://generativelanguage.googleapis.com/v1beta/models/" +
+    encodeURIComponent(STRICT_MODEL) +
+    ":generateContent";
 
-  let lastStatus = 502;
-  let lastMsg = "";
-  for (const candidateModel of modelsToTry) {
-    const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(candidateModel) + ":generateContent";
-    try {
-      const r = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
-        body: JSON.stringify({
-          contents: body.contents,
-          ...(body.systemInstruction ? { systemInstruction: body.systemInstruction } : {}),
-          ...(body.generationConfig ? { generationConfig: body.generationConfig } : {})
-        })
+  try {
+    const r = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": apiKey
+      },
+      body: JSON.stringify({
+        contents: body.contents,
+        ...(body.systemInstruction ? { systemInstruction: body.systemInstruction } : {}),
+        ...(body.generationConfig ? { generationConfig: body.generationConfig } : {})
+      })
+    });
+
+    const data = await r.json().catch(() => ({}));
+    if (r.ok) {
+      const text =
+        data?.candidates?.[0]?.content?.parts?.map((p) => p.text || "").join("").trim() || "";
+      return res.status(200).json({
+        ok: true,
+        source: "gemini",
+        model: STRICT_MODEL,
+        text,
+        candidates: data.candidates
       });
-      const data = await r.json().catch(() => ({}));
-      if (r.ok) {
-        const text = data?.candidates?.[0]?.content?.parts?.map(p => p.text || "").join("").trim() || "";
-        return res.status(200).json({ ok: true, source: "gemini", model: candidateModel, text, candidates: data.candidates });
-      }
-      lastStatus = r.status;
-      lastMsg = data?.error?.message || ("Gemini HTTP " + r.status);
-      if (r.status === 404 || /no longer available|not found|not supported/i.test(lastMsg)) continue;
-      break;
-    } catch (err) {
-      return res.status(502).json({ ok: false, errorCode: "NETWORK_ERROR", message: "Failed to reach Gemini API." });
     }
+
+    const errMsg = data?.error?.message || `Gemini HTTP ${r.status}`;
+    return res.status(r.status).json({
+      ok: false,
+      errorCode: r.status === 429 ? "QUOTA_EXCEEDED" : `UPSTREAM_${r.status}`,
+      message: errMsg
+    });
+  } catch (err) {
+    return res.status(502).json({
+      ok: false,
+      errorCode: "NETWORK_ERROR",
+      message: "Failed to reach Gemini 3.5 Flash-Lite API."
+    });
   }
-  return res.status(lastStatus).json({
-    ok: false,
-    errorCode: lastStatus === 429 ? "QUOTA_EXCEEDED" : "UPSTREAM_" + lastStatus,
-    message: lastMsg || ("Gemini HTTP " + lastStatus)
-  });
 }
